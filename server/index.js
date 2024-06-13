@@ -27,24 +27,36 @@ io.on("connection", (socket) => {
     
     });
 
-    socket.on("RobotMove", (direction) =>{   //"Forward, Backward, Left, Right"
+    socket.on("RobotMove", (direction) =>{   //"Stop, Forward, Backward, Left, Right"
         switch(direction){
+            case 'Stop':
+                console.log("stop")
+                break;
             case 'Forward':
+                console.log("forward")
                 break;
             case 'Backward':
+                console.log("backward")
                 break;
             case 'Left':
+                console.log("left")
                 break;
             case 'Right':
+                console.log("right")
                 break;
         }
     });
 
-    socket.on("RobotTilt", (direction) =>{  //"Up, Down"
+    socket.on("RobotTilt", (direction) =>{  //"Stop, Up, Down"
         switch(direction){
+            case 'Stop':
+                console.log('stop')
+                break;
             case 'Up':
+                console.log('up')
                 break;
             case 'Down':
+                console.log('down')
                 break;
         }
     });

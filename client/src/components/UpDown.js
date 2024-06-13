@@ -4,13 +4,13 @@ import {socket} from '../socket'
 
 function UpDown() {
   const handleClick = (direction) => {
-    socket.emit("RobotMove", {direction});
+    socket.emit("RobotTilt", direction);
   };
 
     return (
     <div className="dpad">
-      <button className="up" style = {{marginBottom:'30px'}}onClick={() => handleClick('Up')}>U</button>
-      <button className="down" style = {{marginTop:'30px'}}onClick={() => handleClick('Down')}>D</button>
+      <button className="up" style = {{marginBottom:'30px'}} onMouseDown={() => handleClick('Up')} onMouseUp={() => handleClick('Stop')}>U</button>
+      <button className="down" style = {{marginTop:'30px'}} onMouseDown={() => handleClick('Down')} onMouseUp={() => handleClick('Stop')}>D</button>
     </div>
   );
 }
