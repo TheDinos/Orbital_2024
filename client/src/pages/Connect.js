@@ -9,7 +9,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import {socket} from '../socket'
+//import {socket} from '../socket'
 
 function Connect(){
 
@@ -33,7 +33,7 @@ function Connect(){
     };
 
     const handleConnect = () => {
-        socket.emit("RobotConnect", );
+        //.emit("RobotConnect", );
         
         // Here you would handle the connection logic with the entered password
         //setSnackbarOpen(true);

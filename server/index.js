@@ -63,7 +63,7 @@ io.on("connection", (socket) => {
 
 })
 
-server.listen(3001, () => {
+server.listen(3002, () => {
     console.log("Server is running");
 });
 

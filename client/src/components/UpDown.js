@@ -1,16 +1,14 @@
 import React from 'react';
 import './Dpad.css'; // Import CSS file for styling
-import {socket} from '../socket'
+import useWebSocketConnection from '../useWebsocket.js'
 
 function UpDown() {
-  const handleClick = (direction) => {
-    socket.emit("RobotTilt", direction);
-  };
+  const { deviceData, sendCommand, connectionStatus, messageHistory } = useWebSocketConnection();
 
     return (
     <div className="dpad">
-      <button className="up" style = {{marginBottom:'30px'}} onMouseDown={() => handleClick('Up')} onMouseUp={() => handleClick('Stop')}>U</button>
-      <button className="down" style = {{marginTop:'30px'}} onMouseDown={() => handleClick('Down')} onMouseUp={() => handleClick('Stop')}>D</button>
+      <button className="up" style = {{marginBottom:'30px'}} onMouseDown={() => sendCommand('Up')} onMouseUp={() => sendCommand('Stop')}>U</button>
+      <button className="down" style = {{marginTop:'30px'}} onMouseDown={() => sendCommand('Down')} onMouseUp={() => sendCommand('Stop')}>D</button>
     </div>
   );
 }

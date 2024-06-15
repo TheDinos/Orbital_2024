@@ -5,7 +5,6 @@ import Control from "./pages/Control";
 import Connect from './pages/Connect';
 import Navbar from './components/Navbar';
 import Intro from './pages/Intro'
-import {socket} from './socket'
 
 function App() {
   
