@@ -25,10 +25,16 @@ process.on('uncaughtException', (error, origin) => {  //Handling exceptions
 const wss = new WebSocket.Server({port: '8999'}, () => console.log(`WS Server is listening at 3001`)); //Initialise Websocket server
 
 wss.on('connection', ws => {  //Listener for connection events, which trigger each time a client connects.
+	console.log('client connected');
 	ws.on('message', data => { //Listener for message event
 		console.log('message');
 		if (ws.readyState !== ws.OPEN) return; //If connection is open, websocket object is added to client array
 		clients.push(ws);
+		/*clients.forEach((client, index) => {
+			console.log(`Client ${index + 1}: ${client._socket.remoteAddress}:${client._socket.remotePort}`);
+		});*/
+
+		console.log('clients pushed');
 		try {    //Processing message event as Json data
 			data = JSON.parse(data);
 			if(data.operation === 'command') {
@@ -37,7 +43,7 @@ wss.on('connection', ws => {  //Listener for connection events, which trigger ea
 					console.log('added');
 				}*/
 				devices['relay_module1'].command = data.command.message.direction;
-				console.log(devices['relay_module1'].command);
+				//console.log(devices['relay_module1'].command);
 			}
 		} catch (error) {}
 	});
@@ -46,24 +52,27 @@ wss.on('connection', ws => {  //Listener for connection events, which trigger ea
 
 // Devices
 Object.entries(devices).forEach(([key]) => {  //Iterating through list of devices connected
-	
 	const device = devices[key];
-
+	
 	new WebSocket.Server({port: device.port}, () => console.log(`WS Server is listening at ${device.port}`)).on('connection',(ws) => {
-		ws.on('message', data => {
-			console.log('hi');
-			if (ws.readyState !== ws.OPEN) return;
+		console.log("device connected");
 
+		ws.on('message', data => {
+			console.log('some message received');
+			if (ws.readyState !== ws.OPEN) return;
+			console.log('device is ready');
             //If data requested by client is a command, enter this, the command was processed earlier
+			
 			if (device.command) {  //Sends commands to device
 				console.log('command sent')
 				ws.send(device.command);
-                console.log(device.command);
+				console.log(device.command);
 				device.command = null; // Clears commands after sending it
 			}
 
             //If data request by client is an object(image data), process images
-			if (typeof data === 'object') { 
+		/*	if (typeof data === 'object') { 
+				console.log('converting image');
 				device.image = Buffer.from(Uint8Array.from(data)).toString('base64');
 			} else {  //not sure if the below part is needed
 				device.peripherals = data.split(",").reduce((acc, item) => {
@@ -72,12 +81,14 @@ Object.entries(devices).forEach(([key]) => {  //Iterating through list of device
 					acc[key] = value;
 					return acc;
 				}, {});
-			}
+			}*/
 
             //Broadcasts to all connected clients(change this)
-			clients.forEach(client => {
-				client.send(JSON.stringify({ devices: devices }));
-			});
+			/*clients.forEach(client => {
+				console.log(device.image);
+				console.log(`Client: ${client._socket.remoteAddress}:${client._socket.remotePort}`);
+				client.send(JSON.stringify({ image: device.image }));
+			});*/
 		});
 	});
 });

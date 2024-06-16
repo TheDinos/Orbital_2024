@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect} from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket'; 
 
 
@@ -21,14 +21,14 @@ const useWebSocketConnection = () => {
     }
   }, [lastMessage]); 
 
-  const sendCommand = (direction) => {
+  const sendCommand = (direction) => { //Process commands to send to Websocket
     const commandMessage = JSON.stringify({
       operation: 'command',
       command: {
         message: {direction},
       },
     });
-    sendMessage(commandMessage); //send the command to the Websocket
+    sendMessage(commandMessage); 
     setCommand(commandMessage);
   };
 
