@@ -11,15 +11,8 @@ function Navbar(){
     const location = useLocation();
     const { pathname } = location;
 
-    // Define the text you want to display on specific routes
-    const pageText = {
-        "/Home": "Guides Page",
-        "/Control": "Functionalities Page",
-        "/Connect": "Blog Page",
-    };
-
-    // Determine the text to display based on the current pathname
-    const displayText = pageText[pathname] || "";
+    //exclude Navbar from Control
+    if(pathname.includes("/Control")||pathname.includes("/control")) return null;
 
   return (
     <AppBar position="static">
@@ -50,10 +43,6 @@ function Navbar(){
             </div>
 
             <Stack direction='row' spacing={2}>
-            {displayText && (
-            <Typography variant="h6">
-              Robot Status: Connected
-            </Typography>)}
             <Button variant = 'outlined'color = 'inherit' component={Link} to="/Home">Get Started</Button>
             </Stack>
 

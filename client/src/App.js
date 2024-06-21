@@ -11,8 +11,9 @@ function App() {
   
   return (
     <Router>
-      <Navbar />
-      <Routes>n
+
+    <Navbar />
+      <Routes>
         <Route path = "/" element={<Intro/>}/>
         <Route path = "/Home" element={<Home/>}/>
         <Route path = "/Control" element={<Control/>}/>
