@@ -17,6 +17,9 @@ const uint16_t websocket_server_port1 = 8888;
 using namespace websockets;
 WebsocketsClient client;
 
+TaskHandle_t Task1;
+TaskHandle_t Task2;
+
 unsigned long next_time = 1000;
 
 void onEventsCallback(WebsocketsEvent event, String data) {
@@ -46,7 +49,6 @@ void onMessageCallback(WebsocketsMessage message) {
   }
 }
 
-// void startCameraServer();
 void setupLedFlash(int pin);
 
 void setup() {
@@ -158,52 +160,66 @@ void setup() {
   delay(500);
 }
 
-//Task1code: Client polling and movement control
+//Task1code: Client Polling and Image Streaming
 void Task1code(void* pvParameters) {
   Serial.print("Task1 running on core ");
   Serial.println(xPortGetCoreID());
 
   for (;;) {
+    client.poll();
+    // Streams images every 1s
+    // Should change to timer interrupt
+    if (millis() > next_time) {
+      next_time = millis() + 1000;
+
+      camera_fb_t* fb = esp_camera_fb_get();
+      if (!fb) {
+        esp_camera_fb_return(fb);
+        return;
+      }
+
+      if (fb->format != PIXFORMAT_JPEG) { return; }
+
+      client.sendBinary((const char*)fb->buf, fb->len);
+      esp_camera_fb_return(fb);
+    }
   }
 }
 
-//Task2code: Image streaming
+//Task2code: Movement Controls
 void Task2code(void* pvParameters) {
   Serial.print("Task2 running on core ");
   Serial.println(xPortGetCoreID());
 
   for (;;) {
-  }
+    client.onMessage([](WebsocketsMessage msg) {
+      Serial.println("Received: " + msg.data());
+
+      if (msg.data() == "Stop") {
+        set_all_ready();
+      } else if (msg.data() == "Forward") {
+        forward_march_1();
+        if (msg.data() == "Forward") {
+          forward_march_2();
+        } else {
+          set_all_ready();
+        }
+      } else if (msg.data() == "Backward") {
+        backward_march_1();
+        if (msg.data() == "Backward") {
+          backward_march_2();
+        } else {
+          set_all_ready();
+        }
+      } else if (msg.data() == "Left") {
+        left_march_1();
+      } else if (msg.data() == "Right") {
+        right_march();
+      }
+    }
+  });
+}
 }
 
 void loop() {
-
-  client.poll();
-
-  client.onMessage([](WebsocketsMessage msg) {
-    Serial.println("Received: " + msg.data());
-    if (msg.data() == "Stop") {
-      set_all_ready();
-    } else if (msg.data() == "Forward") {
-      // Should break into smaller movements and poll for other commands
-      forward_march();
-    }
-  });
-
-  // Streams images every 1s
-  // Should change to timer interrupt
-  if (millis() > next_time) {
-    next_time = millis() + 1000;
-
-    camera_fb_t* fb = esp_camera_fb_get();
-    if (!fb) {
-      esp_camera_fb_return(fb);
-      return;
-    }
-
-    if (fb->format != PIXFORMAT_JPEG) { return; }
-
-    client.sendBinary((const char*)fb->buf, fb->len);
-    esp_camera_fb_return(fb);
-  }
 }

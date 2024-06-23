@@ -40,9 +40,9 @@ int angleToPulse(int angle) {
 
 void inverse_kinematics(int leg, double x, double y) {
   double origin_to_paw = sqrt(sq(x) + sq(y));
-  double alpha = atan(x/y) * 180 / PI;
+  double alpha = atan(x / y) * 180 / PI;
   double beta = -acos(origin_to_paw / 108) * 180 / PI;
-  int shoulder_angle_delta = int(round(-alpha - beta));  // Shoulder Medial angle from front
+  int shoulder_angle_delta = int(round(-alpha - beta));    // Shoulder Medial angle from front
   int elbow_angle_delta = 90 - 2 * abs(int(round(beta)));  // Elbow Medial angle from Straight
 
   // print_IK_values(leg, x, y, origin_to_paw, alpha, beta, shoulder_angle_delta, elbow_angle_delta);
@@ -132,7 +132,7 @@ void set_all_backward() {
   Serial.println();
 }
 
-void set_all_ready() {
+void set_all_ready_1() {
   Serial.println("READY");
   inverse_kinematics(0, -50, 76);
   inverse_kinematics(1, 0, 76);
@@ -141,55 +141,153 @@ void set_all_ready() {
   Serial.println();
 }
 
-void forward_march() {
-  uint32_t long_pause = 400;
-  uint32_t short_pause = 150;
+void set_all_ready_2() {
+  Serial.println("READY");
+  inverse_kinematics(0, -50, 76);
+  inverse_kinematics(1, 0, 76);
+  inverse_kinematics(2, 20, 76);
+  inverse_kinematics(3, 0, 76);
+  Serial.println();
+}
 
+void forward_march_1() {
   // Ready position 1
 
-  delay(long_pause);
-  
-  inverse_kinematics(0, 0, 39); // SIT
+  inverse_kinematics(0, 0, 39);  // SIT
 
-  delay(short_pause);
+  delay(150);
 
-  inverse_kinematics(1, -50, 76); // BACKWARD
-  inverse_kinematics(2, 0, 76); // STAND
-  inverse_kinematics(3, -50, 76); // BACKWARD
+  inverse_kinematics(1, -50, 76);  // BACKWARD
+  inverse_kinematics(2, 0, 76);    // STAND
+  inverse_kinematics(3, -50, 76);  // BACKWARD
 
   delay(75);
 
-  inverse_kinematics(0, 0, 76); // STAND
+  inverse_kinematics(0, 0, 76);  // STAND
 
-  delay(long_pause);
+  delay(400);
 
-  inverse_kinematics(3, 0, 39); // SIT
+  inverse_kinematics(3, 0, 39);  // SIT
 
-  delay(short_pause);
+  delay(150);
 
-  inverse_kinematics(3, 20, 76); // FORWARD
+  inverse_kinematics(3, 20, 76);  // FORWARD
 
-  delay(long_pause);
+  delay(400);
+}
 
+void forward_march_2() {
   // Ready Position 2
 
-  inverse_kinematics(1, 0, 39); // SIT
+  inverse_kinematics(1, 0, 39);  // SIT
 
-  delay(short_pause);
+  delay(150);
 
-  inverse_kinematics(0, -50, 76); // BACKWARD
-  inverse_kinematics(2, -50, 76); // BACKWARD
-  inverse_kinematics(3, 0, 76); // STAND
+  inverse_kinematics(0, -50, 76);  // BACKWARD
+  inverse_kinematics(2, -50, 76);  // BACKWARD
+  inverse_kinematics(3, 0, 76);    // STAND
 
   delay(75);
 
-  inverse_kinematics(1, 0, 76); // STAND
+  inverse_kinematics(1, 0, 76);  // STAND
 
-  delay(long_pause);
+  delay(400);
 
-  inverse_kinematics(2, 0, 39); // SIT
+  inverse_kinematics(2, 0, 39);  // SIT
 
-  delay(short_pause);
+  delay(150);
 
-  inverse_kinematics(2, 20, 76); // FORWARD
+  inverse_kinematics(2, 20, 76);  // FORWARD
+
+  delay(400);
+}
+
+void backward_march_1() {
+  // Ready Position 1
+
+  inverse_kinematics(3, 0, 39);  // SIT
+
+  delay(150);
+
+  inverse_kinematics(0, 20, 76);  // FORWARD
+  inverse_kinematics(1, 0, 76);  // STAND
+  inverse_kinematics(2, 20, 76);    // FORWARD
+
+  delay(75);
+
+  inverse_kinematics(3, 0, 76);  // STAND
+
+  delay(400);
+
+  inverse_kinematics(0, 0, 39);  // SIT
+
+  delay(150);
+
+  inverse_kinematics(0, -50, 76);  // BACKWARD
+
+  delay(400);
+}
+
+void backward_march_2() {
+  // Ready Position 2
+
+  inverse_kinematics(2, 0, 39);  // SIT
+
+  delay(150);
+
+  inverse_kinematics(0, 0, 76);  // STAND
+  inverse_kinematics(1, 20, 76);  // FORWARD
+  inverse_kinematics(3, 20, 76);    // FORWARD
+
+  delay(75);
+
+  inverse_kinematics(2, 0, 76);  // STAND
+
+  delay(400);
+
+  inverse_kinematics(1, 0, 39);  // SIT
+
+  delay(150);
+
+  inverse_kinematics(1, -50, 76);  // BACKWARD
+
+  delay(400);
+}
+
+void left_march() {
+  set_all_ready_1();
+  delay(75);
+
+  inverse_kinematics(1, 0, 39);  // SIT
+  delay(75);
+  inverse_kinematics(1, 20, 76);  // FORWARD
+  delay(75);
+  
+  inverse_kinematics(3, 0, 39);  // SIT
+  delay(75);
+  inverse_kinematics(3, 20, 76);  // FORWARD
+  delay(75);
+  
+  inverse_kinematics(1, -50, 76);  // BACKWARD
+  inverse_kinematics(3, -50, 76);  // BACKWARD
+  delay(75);
+}
+
+void right_march() {
+  set_all_ready_2();
+  delay(75);
+
+  inverse_kinematics(0, 0, 39);  // SIT
+  delay(75);
+  inverse_kinematics(0, 20, 76);  // FORWARD
+  delay(75);
+  
+  inverse_kinematics(2, 0, 39);  // SIT
+  delay(75);
+  inverse_kinematics(2, 20, 76);  // FORWARD
+  delay(75);
+
+  inverse_kinematics(0, -50, 76);  // BACKWARD
+  inverse_kinematics(2, -50, 76);  // BACKWARD
+  delay(75);
 }
