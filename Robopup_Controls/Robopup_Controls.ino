@@ -61,7 +61,8 @@ void setup() {
   delay(500);
 
   // Setup Camera
-  while (!Serial);
+  while (!Serial)
+    ;
   Serial.setDebugOutput(true);
   Serial.println();
 
@@ -133,6 +134,46 @@ void setup() {
 
   Serial.begin(115200);
   while (!client.connect(websocket_server_host, websocket_server_port1, "/")) { delay(500); }
+
+  //create a task that will be executed in the Task1code() function, with priority 1 and executed on core 0
+  xTaskCreatePinnedToCore(
+    Task1code, /* Task function. */
+    "Task1",   /* name of task. */
+    10000,     /* Stack size of task */
+    NULL,      /* parameter of the task */
+    1,         /* priority of the task */
+    &Task1,    /* Task handle to keep track of created task */
+    0);        /* pin task to core 0 */
+  delay(500);
+
+  //create a task that will be executed in the Task2code() function, with priority 1 and executed on core 1
+  xTaskCreatePinnedToCore(
+    Task2code, /* Task function. */
+    "Task2",   /* name of task. */
+    10000,     /* Stack size of task */
+    NULL,      /* parameter of the task */
+    1,         /* priority of the task */
+    &Task2,    /* Task handle to keep track of created task */
+    1);        /* pin task to core 1 */
+  delay(500);
+}
+
+//Task1code: Client polling and movement control
+void Task1code(void* pvParameters) {
+  Serial.print("Task1 running on core ");
+  Serial.println(xPortGetCoreID());
+
+  for (;;) {
+  }
+}
+
+//Task2code: Image streaming
+void Task2code(void* pvParameters) {
+  Serial.print("Task2 running on core ");
+  Serial.println(xPortGetCoreID());
+
+  for (;;) {
+  }
 }
 
 void loop() {
@@ -141,14 +182,16 @@ void loop() {
 
   client.onMessage([](WebsocketsMessage msg) {
     Serial.println("Received: " + msg.data());
-
     if (msg.data() == "Stop") {
       set_all_ready();
     } else if (msg.data() == "Forward") {
+      // Should break into smaller movements and poll for other commands
       forward_march();
     }
   });
 
+  // Streams images every 1s
+  // Should change to timer interrupt
   if (millis() > next_time) {
     next_time = millis() + 1000;
 
