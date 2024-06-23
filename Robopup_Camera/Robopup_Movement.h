@@ -1,15 +1,15 @@
-#include <Wire.h>
+
 #include <math.h>
 #include <Adafruit_PWMServoDriver.h>
-
-Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
 
 #define SERVOMIN 110  // Min pulse length count out of 4096
 #define SERVOMAX 620  // Max pulse length count out of 4096
 
+
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
+
 // Define midpoint angle (90 degrees irl) for each motor due to poor manufacturing tolerances
 int mid[12] = { 95, 87, 88, 90, 88, 85, 94, 93, 95, 95, 92, 97 };
-
 
 // MOTOR MAPPINGS
 
@@ -30,7 +30,6 @@ int mid[12] = { 95, 87, 88, 90, 88, 85, 94, 93, 95, 95, 92, 97 };
 // 9: Front Right 0 down, 180 up
 // 10: Rear Left  0 up, 180 down
 // 11: Rear Right 0 down, 180 up
-
 
 
 
@@ -193,42 +192,4 @@ void forward_march() {
   delay(short_pause);
 
   inverse_kinematics(2, 20, 76); // FORWARD
-}
-
-
-
-
-void setup() {
-  Wire.setPins(14, 13);
-  Serial.begin(115200);
-  Wire.begin();
-  pwm.begin();
-  pwm.setPWMFreq(60);
-  // yield();  // Waits for previous processes to complete
-  set_all_ready();
-  delay(1000);
-}
-
-void loop() {
-  int pause = 2000;
-  
-  // delay(pause);
-  // set_all_neutral();
-
-  // delay(pause);
-  // set_all_sit();
-
-  // delay(pause);
-  // set_all_stand();
-
-  // delay(pause);
-  // set_all_forward();
-
-  // delay(pause);
-  // set_all_backward();
-
-  // delay(pause);
-  // set_all_ready();
-
-  forward_march();
 }
