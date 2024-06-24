@@ -216,37 +216,36 @@ void Task2code(void* pvParameters) {
 
     // Forward
     else if (movement_state == 1) {
+      set_all_ready_1();
       forward_march_1();
       if (movement_state == 1) {
+        set_all_ready_2();
         forward_march_2();
-      } else {
-        set_all_ready_1();
       }
     }
 
     // Backward
     else if (movement_state == 2) {
+      set_all_ready_1();
       backward_march_1();
       if (movement_state == 2) {
+        set_all_ready_2();
         backward_march_2();
-      } else {
+      }
+
+      // Left
+      else if (movement_state == 3) {
         set_all_ready_1();
+        left_march();
+      }
+
+      // Right
+      else if (movement_state == 4) {
+        set_all_ready_2();
+        right_march();
       }
     }
-
-    // Left
-    else if (movement_state == 3) {
-      set_all_ready_1();
-      left_march();
-    }
-
-    // Right
-    else if (movement_state == 4) {
-      set_all_ready_2();
-      right_march();
-    }
   }
-}
 
-void loop() {
-}
+  void loop() {
+  }
