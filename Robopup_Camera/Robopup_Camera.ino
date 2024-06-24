@@ -6,7 +6,7 @@
 
 #include "camera_pins.h"
 
-const char* ssid = "Galaxy";  // "";
+const char* ssid = "Galaxy";        // "";
 const char* password = "wumx7371";  // "";
 
 const char* websocket_server_host = "192.168.85.162";
@@ -47,6 +47,9 @@ void onMessageCallback(WebsocketsMessage message) {
 void setupLedFlash(int pin);
 
 void setup() {
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(7, OUTPUT);
   Serial.begin(115200);
   while (!Serial)
     ;
@@ -129,6 +132,28 @@ void loop() {
 
   client.onMessage([](WebsocketsMessage msg) {
     Serial.println("Received: " + msg.data());
+
+    if (msg.data() == "Stop") {
+      digitalWrite(5,LOW);
+      digitalWrite(6,LOW);
+      digitalWrite(7,LOW);
+    } else if (msg.data() == "Forward") {
+      digitalWrite(5,LOW);
+      digitalWrite(6,LOW);
+      digitalWrite(7,HIGH);
+    } else if (msg.data() == "Backward") {
+      digitalWrite(5,LOW);
+      digitalWrite(6,HIGH);
+      digitalWrite(7,LOW);
+    } else if (msg.data() == "Left") {
+      digitalWrite(5,LOW);
+      digitalWrite(6,HIGH);
+      digitalWrite(7,HIGH);
+    } else if (msg.data() == "Right") {
+      digitalWrite(5,HIGH);
+      digitalWrite(6,LOW);
+      digitalWrite(7,LOW);
+    }
   });
 
   if (millis() > next_time) {

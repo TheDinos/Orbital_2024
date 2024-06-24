@@ -41,9 +41,9 @@ int angleToPulse(int angle) {
 
 void inverse_kinematics(int leg, double x, double y) {
   double origin_to_paw = sqrt(sq(x) + sq(y));
-  double alpha = atan(x/y) * 180 / PI;
+  double alpha = atan(x / y) * 180 / PI;
   double beta = -acos(origin_to_paw / 108) * 180 / PI;
-  int shoulder_angle_delta = int(round(-alpha - beta));  // Shoulder Medial angle from front
+  int shoulder_angle_delta = int(round(-alpha - beta));    // Shoulder Medial angle from front
   int elbow_angle_delta = 90 - 2 * abs(int(round(beta)));  // Elbow Medial angle from Straight
 
   // print_IK_values(leg, x, y, origin_to_paw, alpha, beta, shoulder_angle_delta, elbow_angle_delta);
@@ -149,56 +149,144 @@ void forward_march() {
   // Ready position 1
 
   delay(long_pause);
-  
-  inverse_kinematics(0, 0, 39); // SIT
+
+  inverse_kinematics(0, 0, 39);  // SIT
 
   delay(short_pause);
 
-  inverse_kinematics(1, -50, 76); // BACKWARD
-  inverse_kinematics(2, 0, 76); // STAND
-  inverse_kinematics(3, -50, 76); // BACKWARD
+  inverse_kinematics(1, -50, 76);  // BACKWARD
+  inverse_kinematics(2, 0, 76);    // STAND
+  inverse_kinematics(3, -50, 76);  // BACKWARD
 
   delay(75);
 
-  inverse_kinematics(0, 0, 76); // STAND
+  inverse_kinematics(0, 0, 76);  // STAND
 
   delay(long_pause);
 
-  inverse_kinematics(3, 0, 39); // SIT
+  inverse_kinematics(3, 0, 39);  // SIT
 
   delay(short_pause);
 
-  inverse_kinematics(3, 20, 76); // FORWARD
+  inverse_kinematics(3, 20, 76);  // FORWARD
 
   delay(long_pause);
 
   // Ready Position 2
 
-  inverse_kinematics(1, 0, 39); // SIT
+  inverse_kinematics(1, 0, 39);  // SIT
 
   delay(short_pause);
 
-  inverse_kinematics(0, -50, 76); // BACKWARD
-  inverse_kinematics(2, -50, 76); // BACKWARD
-  inverse_kinematics(3, 0, 76); // STAND
+  inverse_kinematics(0, -50, 76);  // BACKWARD
+  inverse_kinematics(2, -50, 76);  // BACKWARD
+  inverse_kinematics(3, 0, 76);    // STAND
 
   delay(75);
 
-  inverse_kinematics(1, 0, 76); // STAND
+  inverse_kinematics(1, 0, 76);  // STAND
 
   delay(long_pause);
 
-  inverse_kinematics(2, 0, 39); // SIT
+  inverse_kinematics(2, 0, 39);  // SIT
 
   delay(short_pause);
 
-  inverse_kinematics(2, 20, 76); // FORWARD
+  inverse_kinematics(2, 20, 76);  // FORWARD
+}
+
+void backward_march() {
+  // Ready Position 1
+
+  inverse_kinematics(3, 0, 39);  // SIT
+
+  delay(150);
+
+  inverse_kinematics(0, 20, 76);  // FORWARD
+  inverse_kinematics(1, 0, 76);   // STAND
+  inverse_kinematics(2, 20, 76);  // FORWARD
+
+  delay(75);
+
+  inverse_kinematics(3, 0, 76);  // STAND
+
+  delay(400);
+
+  inverse_kinematics(0, 0, 39);  // SIT
+
+  delay(150);
+
+  inverse_kinematics(0, -50, 76);  // BACKWARD
+
+  delay(400);
+
+  // Ready Position 2
+
+  inverse_kinematics(2, 0, 39);  // SIT
+
+  delay(150);
+
+  inverse_kinematics(0, 0, 76);   // STAND
+  inverse_kinematics(1, 20, 76);  // FORWARD
+  inverse_kinematics(3, 20, 76);  // FORWARD
+
+  delay(75);
+
+  inverse_kinematics(2, 0, 76);  // STAND
+
+  delay(400);
+
+  inverse_kinematics(1, 0, 39);  // SIT
+
+  delay(150);
+
+  inverse_kinematics(1, -50, 76);  // BACKWARD
+
+  delay(400);
+}
+
+void left_march() {
+  set_all_ready();
+  delay(75);
+
+  inverse_kinematics(1, 0, 39);  // SIT
+  delay(75);
+  inverse_kinematics(1, 20, 76);  // FORWARD
+  delay(75);
+
+  inverse_kinematics(3, 0, 39);  // SIT
+  delay(75);
+  inverse_kinematics(3, 20, 76);  // FORWARD
+  delay(75);
+
+  inverse_kinematics(1, 0, 76);  // STAND
+  inverse_kinematics(3, 0, 76);  // STAND
+  delay(75);
+}
+
+void right_march() {
+  delay(75);
+
+  inverse_kinematics(0, 0, 39);  // SIT
+  delay(75);
+  inverse_kinematics(0, 20, 76);  // FORWARD
+  delay(75);
+
+  inverse_kinematics(2, 0, 39);  // SIT
+  delay(75);
+  inverse_kinematics(2, 20, 76);  // FORWARD
+  delay(75);
+
+  inverse_kinematics(0, 0, 76);  // STAND
+  inverse_kinematics(2, 0, 76);  // STAND
+  delay(75);
 }
 
 
-
-
 void setup() {
+  pinMode(4, INPUT);
+  pinMode(5, INPUT);
+  pinMode(6, INPUT);
   Wire.setPins(14, 13);
   Serial.begin(115200);
   Wire.begin();
@@ -210,8 +298,26 @@ void setup() {
 }
 
 void loop() {
-  int pause = 2000;
-  
+  if (digitalRead(4) == LOW) {
+    if (digitalRead(5) == LOW) {
+      if (digitalRead(6) == LOW) {
+        set_all_ready();
+      } else {
+        forward_march();
+      }
+    } else {
+      if (digitalRead(6) == LOW) {
+        backward_march();
+      } else {
+        left_march();
+      }
+    }
+  } else {
+    right_march();
+  }
+
+  // int pause = 2000;
+
   // delay(pause);
   // set_all_neutral();
 
@@ -229,6 +335,4 @@ void loop() {
 
   // delay(pause);
   // set_all_ready();
-
-  forward_march();
 }
