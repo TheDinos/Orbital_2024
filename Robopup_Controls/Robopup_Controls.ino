@@ -22,6 +22,8 @@ TaskHandle_t Task2;
 
 unsigned long next_time = 1000;
 
+int movement_state = 0;
+
 void onEventsCallback(WebsocketsEvent event, String data) {
   if (event == WebsocketsEvent::ConnectionOpened) {
     Serial.println("Connection Opened");
@@ -59,7 +61,7 @@ void setup() {
   Wire.begin();
   pwm.begin();
   pwm.setPWMFreq(60);
-  set_all_ready();
+  set_all_ready_1();
   delay(500);
 
   // Setup Camera
@@ -167,22 +169,37 @@ void Task1code(void* pvParameters) {
 
   for (;;) {
     client.poll();
-    // Streams images every 1s
-    // Should change to timer interrupt
-    if (millis() > next_time) {
-      next_time = millis() + 1000;
+    client.onMessage([](WebsocketsMessage msg) {
+      Serial.println("Received: " + msg.data());
 
-      camera_fb_t* fb = esp_camera_fb_get();
-      if (!fb) {
-        esp_camera_fb_return(fb);
-        return;
+      if (msg.data() == "Stop") {
+        movement_state = 0;
+      } else if (msg.data() == "Forward") {
+        movement_state = 1;
+      } else if (msg.data() == "Backward") {
+        movement_state = 2;
+      } else if (msg.data() == "Left") {
+        movement_state = 3;
+      } else if (msg.data() == "Right") {
+        movement_state = 4;
       }
 
-      if (fb->format != PIXFORMAT_JPEG) { return; }
+      // Streams images every 1s
+      if (millis() > next_time) {
+        next_time = millis() + 1000;
 
-      client.sendBinary((const char*)fb->buf, fb->len);
-      esp_camera_fb_return(fb);
-    }
+        camera_fb_t* fb = esp_camera_fb_get();
+        if (!fb) {
+          esp_camera_fb_return(fb);
+          return;
+        }
+
+        if (fb->format != PIXFORMAT_JPEG) { return; }
+
+        client.sendBinary((const char*)fb->buf, fb->len);
+        esp_camera_fb_return(fb);
+      }
+    });
   }
 }
 
@@ -192,33 +209,43 @@ void Task2code(void* pvParameters) {
   Serial.println(xPortGetCoreID());
 
   for (;;) {
-    client.onMessage([](WebsocketsMessage msg) {
-      Serial.println("Received: " + msg.data());
+    // Stop
+    if (movement_state == 0) {
+      set_all_ready_1();
+    }
 
-      if (msg.data() == "Stop") {
-        set_all_ready();
-      } else if (msg.data() == "Forward") {
-        forward_march_1();
-        if (msg.data() == "Forward") {
-          forward_march_2();
-        } else {
-          set_all_ready();
-        }
-      } else if (msg.data() == "Backward") {
-        backward_march_1();
-        if (msg.data() == "Backward") {
-          backward_march_2();
-        } else {
-          set_all_ready();
-        }
-      } else if (msg.data() == "Left") {
-        left_march_1();
-      } else if (msg.data() == "Right") {
-        right_march();
+    // Forward
+    else if (movement_state == 1) {
+      forward_march_1();
+      if (movement_state == 1) {
+        forward_march_2();
+      } else {
+        set_all_ready_1();
       }
     }
-  });
-}
+
+    // Backward
+    else if (movement_state == 2) {
+      backward_march_1();
+      if (movement_state == 2) {
+        backward_march_2();
+      } else {
+        set_all_ready_1();
+      }
+    }
+
+    // Left
+    else if (movement_state == 3) {
+      set_all_ready_1();
+      left_march();
+    }
+
+    // Right
+    else if (movement_state == 4) {
+      set_all_ready_2();
+      right_march();
+    }
+  }
 }
 
 void loop() {

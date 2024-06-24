@@ -268,13 +268,12 @@ void left_march() {
   inverse_kinematics(3, 20, 76);  // FORWARD
   delay(75);
   
-  inverse_kinematics(1, -50, 76);  // BACKWARD
-  inverse_kinematics(3, -50, 76);  // BACKWARD
+  inverse_kinematics(1, 0, 76);  // STAND
+  inverse_kinematics(3, 0, 76);  // STAND
   delay(75);
 }
 
 void right_march() {
-  set_all_ready_2();
   delay(75);
 
   inverse_kinematics(0, 0, 39);  // SIT
@@ -287,7 +286,7 @@ void right_march() {
   inverse_kinematics(2, 20, 76);  // FORWARD
   delay(75);
 
-  inverse_kinematics(0, -50, 76);  // BACKWARD
-  inverse_kinematics(2, -50, 76);  // BACKWARD
+  inverse_kinematics(0, 0, 76);  // STAND
+  inverse_kinematics(2, 0, 76);  // STAND
   delay(75);
 }
