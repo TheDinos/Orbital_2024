@@ -9,10 +9,10 @@
 #include "camera_pins.h"
 #include "camera_index.h"
 
-const char* ssid = "Galaxy";
-const char* password = "wumx7371";
+const char* ssid = "ISD Surveillance Van";
+const char* password = "I love Shanmugam";
 
-const char* websocket_server_host = "192.168.85.162";
+const char* websocket_server_host = "192.168.211.48";
 const uint16_t websocket_server_port1 = 8888;
 using namespace websockets;
 WebsocketsClient client;
@@ -65,7 +65,8 @@ void setup() {
   delay(500);
 
   // Setup Camera
-  while (!Serial);
+  while (!Serial)
+    ;
   Serial.setDebugOutput(true);
   Serial.println();
 
@@ -127,16 +128,26 @@ void setup() {
   s->set_contrast(s, 0);
   s->set_raw_gma(s, 1);
 
+  Serial.println("Beginning WiFi");
+
   WiFi.begin(ssid, password);
   WiFi.setSleep(false);
-
-  while (WiFi.status() != WL_CONNECTED) { delay(500); }
+  // while (WiFi.status() != WL_CONNECTED)
+  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.println("Attempting WiFi Connection");
+    delay(500);
+  }
+  Serial.println("WiFi Connected");
 
   client.onMessage(onMessageCallback);
   client.onEvent(onEventsCallback);
 
   Serial.begin(115200);
-  while (!client.connect(websocket_server_host, websocket_server_port1, "/")) { delay(500); }
+  while (!client.connect(websocket_server_host, websocket_server_port1, "/")) {
+    Serial.println("Attempting Client Connection");
+    delay(500);
+  }
+  Serial.println("Client Connected");
 
   //create a task that will be executed in the Task1code() function, with priority 1 and executed on core 0
   xTaskCreatePinnedToCore(
@@ -161,9 +172,34 @@ void setup() {
   delay(500);
 }
 
-//Task1code: Client Polling and Image Streaming
+//Task1code: Image Streaming
 void Task1code(void* pvParameters) {
   Serial.print("Task1 running on core ");
+  Serial.println(xPortGetCoreID());
+
+  for (;;) {
+    // Streams images every 1s
+    if (millis() > next_time) {
+    Serial.println("Sending Image");
+      next_time = millis() + 1000;
+
+      camera_fb_t* fb = esp_camera_fb_get();
+      if (!fb) {
+        esp_camera_fb_return(fb);
+        return;
+      }
+
+      if (fb->format != PIXFORMAT_JPEG) { return; }
+
+      client.sendBinary((const char*)fb->buf, fb->len);
+      esp_camera_fb_return(fb);
+    }
+  }
+}
+
+//Task2code: Client Polling and Movement Controls
+void Task2code(void* pvParameters) {
+  Serial.print("Task2 running on core ");
   Serial.println(xPortGetCoreID());
 
   for (;;) {
@@ -183,68 +219,45 @@ void Task1code(void* pvParameters) {
         movement_state = 4;
       }
 
-      // Streams images every 1s
-      if (millis() > next_time) {
-        next_time = millis() + 1000;
+      // Stop
+      if (movement_state == 0) {
+        set_all_ready_1();
+      }
 
-        camera_fb_t* fb = esp_camera_fb_get();
-        if (!fb) {
-          esp_camera_fb_return(fb);
-          return;
+      // Forward
+      else if (movement_state == 1) {
+        set_all_ready_1();
+        forward_march_1();
+        if (movement_state == 1) {
+          set_all_ready_2();
+          forward_march_2();
+        }
+      }
+
+      // Backward
+      else if (movement_state == 2) {
+        set_all_ready_1();
+        backward_march_1();
+        if (movement_state == 2) {
+          set_all_ready_2();
+          backward_march_2();
         }
 
-        if (fb->format != PIXFORMAT_JPEG) { return; }
+        // Left
+        else if (movement_state == 3) {
+          set_all_ready_1();
+          left_march();
+        }
 
-        client.sendBinary((const char*)fb->buf, fb->len);
-        esp_camera_fb_return(fb);
+        // Right
+        else if (movement_state == 4) {
+          set_all_ready_2();
+          right_march();
+        }
       }
     });
   }
 }
 
-//Task2code: Movement Controls
-void Task2code(void* pvParameters) {
-  Serial.print("Task2 running on core ");
-  Serial.println(xPortGetCoreID());
-
-  for (;;) {
-    // Stop
-    if (movement_state == 0) {
-      set_all_ready_1();
-    }
-
-    // Forward
-    else if (movement_state == 1) {
-      set_all_ready_1();
-      forward_march_1();
-      if (movement_state == 1) {
-        set_all_ready_2();
-        forward_march_2();
-      }
-    }
-
-    // Backward
-    else if (movement_state == 2) {
-      set_all_ready_1();
-      backward_march_1();
-      if (movement_state == 2) {
-        set_all_ready_2();
-        backward_march_2();
-      }
-
-      // Left
-      else if (movement_state == 3) {
-        set_all_ready_1();
-        left_march();
-      }
-
-      // Right
-      else if (movement_state == 4) {
-        set_all_ready_2();
-        right_march();
-      }
-    }
-  }
-
-  void loop() {
-  }
+void loop() {
+}

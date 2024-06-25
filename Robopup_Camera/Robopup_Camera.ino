@@ -144,7 +144,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Polling Client");
+  // Serial.println("Polling Client");
   client.poll();
   client.onMessage([](WebsocketsMessage msg) {
     Serial.println("Received: " + msg.data());
