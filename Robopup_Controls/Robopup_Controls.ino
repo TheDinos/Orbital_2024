@@ -65,8 +65,7 @@ void setup() {
   delay(500);
 
   // Setup Camera
-  while (!Serial)
-    ;
+  while (!Serial);
   Serial.setDebugOutput(true);
   Serial.println();
 

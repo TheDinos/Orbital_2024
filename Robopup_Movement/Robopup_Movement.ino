@@ -7,6 +7,14 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
 #define SERVOMIN 110  // Min pulse length count out of 4096
 #define SERVOMAX 620  // Max pulse length count out of 4096
 
+#define CommsPin1 4
+#define CommsPin2 5
+#define CommsPin3 6
+
+bool curr1 = 0;
+bool curr2 = 0;
+bool curr3 = 0;
+
 // Define midpoint angle (90 degrees irl) for each motor due to poor manufacturing tolerances
 int mid[12] = { 95, 87, 88, 90, 88, 85, 94, 93, 95, 95, 92, 97 };
 
@@ -89,57 +97,45 @@ void print_IK_values(int leg, double x, double y, double origin_to_paw, double a
 }
 
 void set_all_neutral() {
-  Serial.println("NEUTRAL");
   inverse_kinematics(0, 54, 54);
   inverse_kinematics(1, 54, 54);
   inverse_kinematics(2, 54, 54);
   inverse_kinematics(3, 54, 54);
-  Serial.println();
 }
 
 void set_all_sit() {
-  Serial.println("SIT");
   inverse_kinematics(0, 0, 39);
   inverse_kinematics(1, 0, 39);
   inverse_kinematics(2, 0, 39);
   inverse_kinematics(3, 0, 39);
-  Serial.println();
 }
 
 void set_all_stand() {
-  Serial.println("STAND");
   inverse_kinematics(0, 0, 76);
   inverse_kinematics(1, 0, 76);
   inverse_kinematics(2, 0, 76);
   inverse_kinematics(3, 0, 76);
-  Serial.println();
 }
 
 void set_all_forward() {
-  Serial.println("FORWARD");
   inverse_kinematics(0, 40, 76);
   inverse_kinematics(1, 40, 76);
   inverse_kinematics(2, 40, 76);
   inverse_kinematics(3, 40, 76);
-  Serial.println();
 }
 
 void set_all_backward() {
-  Serial.println("BACKWARD");
   inverse_kinematics(0, -40, 76);
   inverse_kinematics(1, -40, 76);
   inverse_kinematics(2, -40, 76);
   inverse_kinematics(3, -40, 76);
-  Serial.println();
 }
 
 void set_all_ready() {
-  Serial.println("READY");
   inverse_kinematics(0, -50, 76);
   inverse_kinematics(1, 0, 76);
   inverse_kinematics(2, 20, 76);
   inverse_kinematics(3, 0, 76);
-  Serial.println();
 }
 
 void forward_march() {
@@ -292,28 +288,87 @@ void setup() {
   Wire.begin();
   pwm.begin();
   pwm.setPWMFreq(60);
-  // yield();  // Waits for previous processes to complete
   set_all_ready();
-  delay(1000);
+
+  Serial.print(curr1);
+  Serial.print(curr2);
+  Serial.print(curr3);
+  Serial.print(": ");
+  Serial.println("Stop");
 }
 
 void loop() {
-  if (digitalRead(4) == LOW) {
-    if (digitalRead(5) == LOW) {
-      if (digitalRead(6) == LOW) {
-        set_all_ready();
-      } else {
-        forward_march();
-      }
-    } else {
-      if (digitalRead(6) == LOW) {
-        backward_march();
-      } else {
-        left_march();
-      }
+  bool bit1 = digitalRead(CommsPin1);
+  bool bit2 = digitalRead(CommsPin2);
+  bool bit3 = digitalRead(CommsPin3);
+
+  if (!bit1 && !bit2 && !bit3) {
+    if (!(curr1 == bit1 && curr2 == bit2 && curr3 == bit3)) {
+      Serial.print(bit1);
+      Serial.print(bit2);
+      Serial.print(bit3);
+      Serial.print(": ");
+      Serial.println("Stop");
+      curr1 = bit1;
+      curr2 = bit2;
+      curr3 = bit3;
     }
-  } else {
+    set_all_ready();
+  } else if (!bit1 && !bit2 && bit3) {
+    if (!(curr1 == bit1 && curr2 == bit2 && curr3 == bit3)) {
+      Serial.print(bit1);
+      Serial.print(bit2);
+      Serial.print(bit3);
+      Serial.print(": ");
+      Serial.println("Forward");
+      curr1 = bit1;
+      curr2 = bit2;
+      curr3 = bit3;
+    }
+    forward_march();
+  } else if (!bit1 && bit2 && !bit3) {
+    if (!(curr1 == bit1 && curr2 == bit2 && curr3 == bit3)) {
+      Serial.print(bit1);
+      Serial.print(bit2);
+      Serial.print(bit3);
+      Serial.print(": ");
+      Serial.println("Backward");
+      curr1 = bit1;
+      curr2 = bit2;
+      curr3 = bit3;
+    }
+    backward_march();
+  } else if (!bit1 && bit2 && bit3) {
+    if (!(curr1 == bit1 && curr2 == bit2 && curr3 == bit3)) {
+      Serial.print(bit1);
+      Serial.print(bit2);
+      Serial.print(bit3);
+      Serial.print(": ");
+      Serial.println("Left");
+      curr1 = bit1;
+      curr2 = bit2;
+      curr3 = bit3;
+    }
+    left_march();
+  } else if (bit1 && !bit2 && !bit3) {
+    if (!(curr1 == bit1 && curr2 == bit2 && curr3 == bit3)) {
+      Serial.print(bit1);
+      Serial.print(bit2);
+      Serial.print(bit3);
+      Serial.print(": ");
+      Serial.println("Right");
+      curr1 = bit1;
+      curr2 = bit2;
+      curr3 = bit3;
+    }
     right_march();
+  } else {
+    Serial.print(bit1);
+    Serial.print(bit2);
+    Serial.print(bit3);
+    Serial.print(": ");
+    Serial.println("Null");
+    set_all_ready();
   }
 
   // int pause = 2000;
