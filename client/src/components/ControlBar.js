@@ -12,10 +12,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
-
+import { useAuth } from "../firebaseAuth/authContext.js"
+import { useNavigate } from "react-router-dom";
 
 
 function ControlBar() { 
+    const {logout} = useAuth();
+    const navigate = useNavigate();
 
     const {deviceStatus} = useWebSocketConnection();
     const [disconnectOpen, setDisconnectOpen] = useState(false);
@@ -28,8 +31,14 @@ function ControlBar() {
         setDisconnectOpen(false)
     }
 
-    const handleDisconnect = () =>{
-        ///add some logic here
+    const handleDisconnect = async () =>{
+        try{
+            await logout();
+            navigate("/Control"); //redirects to Control if login is successful, Control is a protected route
+        }
+        catch (error) {
+            console.log(error.code);
+        }
     }
 
     return (
