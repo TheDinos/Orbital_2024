@@ -6,9 +6,19 @@
 
 #include "camera_pins.h"
 
+<<<<<<< HEAD
 const char* ssid = "ISD Surveillance Van";        // "";
 const char* password = "I love Shanmugam";  // "";
 
+=======
+#define CommsPin1 4
+#define CommsPin2 5
+#define CommsPin3 6
+
+const char* ssid = "ISD Surveillance Van";  // "Galaxy";        // "";
+const char* password = "I love Shanmugam";  // "wumx7371";  // "";
+
+>>>>>>> 348cb9984546028bb2bb4f0ae9b1f459d63e7f8f
 const char* websocket_server_host = "192.168.211.48";
 const uint16_t websocket_server_port1 = 8888;
 using namespace websockets;
@@ -43,16 +53,20 @@ void onMessageCallback(WebsocketsMessage message) {
   }
 }
 
-// void startCameraServer();
 void setupLedFlash(int pin);
 
 void setup() {
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
-  pinMode(7, OUTPUT);
+
+  pinMode(CommsPin1, OUTPUT);
+  pinMode(CommsPin2, OUTPUT);
+  pinMode(CommsPin3, OUTPUT);
+
+  digitalWrite(CommsPin1, LOW);
+  digitalWrite(CommsPin2, LOW);
+  digitalWrite(CommsPin3, LOW);
+
   Serial.begin(115200);
-  while (!Serial)
-    ;
+  // while(!Serial);
   Serial.setDebugOutput(true);
   Serial.println();
 
@@ -86,8 +100,7 @@ void setup() {
   config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
   config.fb_location = CAMERA_FB_IN_PSRAM;
 
-  // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
-  //                      for larger pre-allocated frame buffer.
+  // if PSRAM IC present, init with UXGA resolution and higher JPEG quality for larger pre-allocated frame buffer.
   if (config.pixel_format == PIXFORMAT_JPEG) {
     if (psramFound()) {
       config.jpeg_quality = 10;
@@ -114,49 +127,79 @@ void setup() {
   s->set_contrast(s, 0);
   s->set_raw_gma(s, 1);
 
+  Serial.println("Beginning WiFi");
+
   WiFi.begin(ssid, password);
   WiFi.setSleep(false);
-
-  while (WiFi.status() != WL_CONNECTED) { delay(500); }
+  // while (WiFi.status() != WL_CONNECTED)
+  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.println("Attempting WiFi Connection");
+    delay(500);
+  }
+  Serial.println("WiFi Connected");
 
   client.onMessage(onMessageCallback);
   client.onEvent(onEventsCallback);
 
   Serial.begin(115200);
-  while (!client.connect(websocket_server_host, websocket_server_port1, "/")) { delay(500); }
+  while (!client.connect(websocket_server_host, websocket_server_port1, "/")) {
+    Serial.println("Attempting Client Connection");
+    delay(500);
+  }
+  Serial.println("Client Connected");
 }
 
 void loop() {
-
+  // Serial.println("Polling Client");
   client.poll();
-
   client.onMessage([](WebsocketsMessage msg) {
     Serial.println("Received: " + msg.data());
 
     if (msg.data() == "Stop") {
-      digitalWrite(5,LOW);
-      digitalWrite(6,LOW);
-      digitalWrite(7,LOW);
+      digitalWrite(CommsPin1, LOW);
+      digitalWrite(CommsPin2, LOW);
+      digitalWrite(CommsPin3, LOW);
+      Serial.print("Write: ");
+      Serial.print(0);
+      Serial.print(0);
+      Serial.println(0);
     } else if (msg.data() == "Forward") {
-      digitalWrite(5,LOW);
-      digitalWrite(6,LOW);
-      digitalWrite(7,HIGH);
+      digitalWrite(CommsPin1, LOW);
+      digitalWrite(CommsPin2, LOW);
+      digitalWrite(CommsPin3, HIGH);
+      Serial.print("Write: ");
+      Serial.print(0);
+      Serial.print(0);
+      Serial.println(1);
     } else if (msg.data() == "Backward") {
-      digitalWrite(5,LOW);
-      digitalWrite(6,HIGH);
-      digitalWrite(7,LOW);
+      digitalWrite(CommsPin1, LOW);
+      digitalWrite(CommsPin2, HIGH);
+      digitalWrite(CommsPin3, LOW);
+      Serial.print("Write: ");
+      Serial.print(0);
+      Serial.print(1);
+      Serial.println(0);
     } else if (msg.data() == "Left") {
-      digitalWrite(5,LOW);
-      digitalWrite(6,HIGH);
-      digitalWrite(7,HIGH);
+      digitalWrite(CommsPin1, LOW);
+      digitalWrite(CommsPin2, HIGH);
+      digitalWrite(CommsPin3, HIGH);
+      Serial.print("Write: ");
+      Serial.print(0);
+      Serial.print(1);
+      Serial.println(1);
     } else if (msg.data() == "Right") {
-      digitalWrite(5,HIGH);
-      digitalWrite(6,LOW);
-      digitalWrite(7,LOW);
+      digitalWrite(CommsPin1, HIGH);
+      digitalWrite(CommsPin2, LOW);
+      digitalWrite(CommsPin3, LOW);
+      Serial.print("Write: ");
+      Serial.print(1);
+      Serial.print(0);
+      Serial.println(0);
     }
   });
 
   if (millis() > next_time) {
+    Serial.println("Sending Image");
     next_time = millis() + 1000;
 
     camera_fb_t* fb = esp_camera_fb_get();
