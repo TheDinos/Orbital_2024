@@ -33,13 +33,13 @@ function ControlBar() {
     }
 
     return (
-        <AppBar position="static" sx={{bgcolor:"#36454F"}}>
+        <AppBar position="static" sx={{bgcolor:"#36454F", marginBottom: '10px'}} >
         <Toolbar>
             <Stack 
             direction='row' 
             paddingLeft={1} //Space away from the icon
             spacing={3} 
-            divider={<Divider orientation="vertical" flexItem sx={{color:'white'}}/>} 
+            divider={<Divider aria-hidden="true" orientation="vertical" flexItem sx={{bgcolor: "secondary.light"}}/>} 
             sx={{ flexGrow: 1, alignItems:'center', justifyContent: 'flex-start' }}>
                 
                 <SettingsIcon fontSize='large'/>

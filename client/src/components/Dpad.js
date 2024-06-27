@@ -11,9 +11,9 @@ function Dpad() { //dpad design taken from: https://codepen.io/tswone/pen/GLzZLd
     <div class="set">
       <nav class="d-pad">
         <button class="up" onMouseDown={() =>  sendCommand('Forward')} onMouseUp={() => sendCommand('Stop')}/>
-        <button class="right" onMouseDown={() => sendCommand('Left')} onMouseUp={() => sendCommand('Stop')}/>
-        <button class="down" onMouseDown={() => sendCommand('Right')} onMouseUp={() => sendCommand('Stop')}/>
-        <button class="left" onMouseDown={() => sendCommand('Backward')} onMouseUp={() => sendCommand('Stop')} />
+        <button class="right" onMouseDown={() => sendCommand('Right')} onMouseUp={() => sendCommand('Stop')}/>
+        <button class="down" onMouseDown={() => sendCommand('Backward')} onMouseUp={() => sendCommand('Stop')}/>
+        <button class="left" onMouseDown={() => sendCommand('Left')} onMouseUp={() => sendCommand('Stop')} />
       </nav>
     </div> 
   );

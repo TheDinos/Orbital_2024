@@ -2,7 +2,6 @@ import '../App.css';
 import  React, {useState} from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button'; 
-import {Link} from 'react-router-dom';
 import { ListItemText, TextField } from '@mui/material';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -13,16 +12,38 @@ import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
+import { useAuth } from "../firebaseAuth/authContext";
+import { useNavigate } from "react-router-dom";
+
 
 
 function Connect(){
-
+    const {login} = useAuth();
+    const navigate = useNavigate();
     const [connectError, setConnectError] = useState(false); //Sets to true when there is a connection error
-    const [loginError, setLoginError] = useState(true); //Sets to true when there is a login error
+    const [loginError, setLoginError] = useState(false); //Sets to true when there is a login error
+    const [loginErrorMsg, setLoginErrorMsg] = useState("");
+
+
+    const [robotId, setRobotId] = useState('');
+    const [robotPw, setRobotPw] = useState('');
     
-    const handleConnect = () => {
-        // Here you would handle the connection logic with the entered password
-        //setSnackbarOpen(true);
+    const handleConnect = async () => {
+        try{
+            await login(robotId, robotPw);
+            navigate("/Control"); //redirects to Control if login is successful, Control is a protected route
+        }
+        catch (error) {
+            //console.log(error.code);
+            if (error.code === 'auth/invalid-email') {
+                setLoginErrorMsg("This robotId doesn't exist");
+                setLoginError(true);
+            } else if (error.code === 'auth/invalid-credential') {
+                setLoginErrorMsg("Wrong password");
+                setLoginError(true);
+            } else { //for connection errors
+            }
+        }
     };
 
     return(
@@ -47,7 +68,7 @@ function Connect(){
                         </IconButton>
                         }
                     sx={{ mb: 2 }}>
-                        {(loginError) ? "Incorrect robot ID or password." : 
+                        {(loginError) ? loginErrorMsg : 
                          (connectError) ? "Unable to establish robot connection." : ""}
                     </Alert>
                 </Collapse>                  
@@ -69,22 +90,26 @@ function Connect(){
                         colour = "secondary"
                         type = "username"
                         margin = "normal" 
+                        value = {robotId}
+                        onChange={e => setRobotId(e.target.value)}
                         focused/>
                         
                         <TextField 
                         required
-                        
                         label = "Password" 
                         colour = "secondary"
                         type = "password"
                         margin = "normal" 
+                        value = {robotPw}
+                        onChange={e => setRobotPw(e.target.value)}
                         focused/>
 
                         <Button 
                             size="large" 
                             variant="contained" 
-                            component={Link} to="/control" 
+                            //component={Link} to="/control" 
                             onClick={handleConnect}
+                           // loading = {loading};
                             sx={{width:'100%', fontSize:'100%'}}>
                         Connect
                         </Button>

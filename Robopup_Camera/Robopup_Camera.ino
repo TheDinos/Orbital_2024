@@ -6,10 +6,10 @@
 
 #include "camera_pins.h"
 
-const char* ssid = "Galaxy";        // "";
-const char* password = "wumx7371";  // "";
+const char* ssid = "ISD Surveillance Van";        // "";
+const char* password = "I love Shanmugam";  // "";
 
-const char* websocket_server_host = "192.168.85.162";
+const char* websocket_server_host = "192.168.211.48";
 const uint16_t websocket_server_port1 = 8888;
 using namespace websockets;
 WebsocketsClient client;

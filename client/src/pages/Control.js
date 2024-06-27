@@ -9,7 +9,7 @@ function TeleOperation(){
             <header className="App-header">
             <ControlBar/>
             <RobotVideo/> 
-
+            
             <ControlMovementHeader/>
             <Dpad/>
                

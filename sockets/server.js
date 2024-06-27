@@ -2,6 +2,9 @@ const path = require('path');
 const express = require('express');
 const WebSocket = require('ws');
 const { v4: uuidv4 } = require('uuid');
+const EventEmitter = require('events');
+const commandEmitter = new EventEmitter();
+
 
 const app = express();
 
@@ -10,11 +13,12 @@ app.use('/static', express.static(path.join(__dirname, 'public'))); //express se
 const WS_CLIENT_PORT = 8999;
 const HTTP_PORT = 8000;
 let devices = {  //Stores array of robots and their infos 
-	robot1: { port: 8888,
-			uid: 12345, 
-			commandQueue:[],
-			statusQueue:[],
-			connectionStatus:'Disconnected',
+	
+	12345: {   //Robot uid
+			port: 8888,	 //Port its connected to
+			commandQueue:'', //Placeholder for commands from client that have not yet been sent
+			connectionStatus:'Disconnected', //Connection status
+			clientUid: '', //uid for client it receives and send information to
 			}, 
 };
 
@@ -36,81 +40,63 @@ const addClients = (ws) =>{
 //Initialise Websocket Server for Clients
 const ClientWss = new WebSocket.Server({port: WS_CLIENT_PORT}, () => console.log(`Client WS Server is listening at ${WS_CLIENT_PORT}`)); 
 
-//Handles Client Connections (Listener)
+//Handles Client Connections 
 ClientWss.on('connection', ws => {  
 	
-	addClients(ws); //Give new clients unique id's
-	/*ClientWss.clients.forEach((client) => {
-		console.log(`Client uid: ${client.uid}`);
-	});*/
+	addClients(ws); 
+	console.log(`Client ${ws.uid} connected.`);
 
-	ws.on('message', data => { //Listener for message event
-		console.log('data from client');
-		if (ws.readyState !== ws.OPEN) return; 	
+	//Listener for client's commands 
+	ws.on('message', data => { 
 
-		try {    //Processing message event as Json data
-			data = JSON.parse(data);
+		//Processing message from clients as commands
+		try {    
+			data = JSON.parse(data); //Processing message event as Json data
 			
 			if(data.operation === 'movement') {
 				console.log(data.direction);
-				devices['robot1'].commandQueue.push(data.direction);
+				devices['12345'].commandQueue = data.direction; 
+				commandEmitter.emit('12345');
 			}
-			else if(data.operation === 'status') {
-				devices['robot1'].commandQueue.push('status');
-			}
+			//For extension: Add more if else loops if other commands 
 
-		} catch (error) {}
-		devices['robot1'].commandQueue.forEach((command, index) => {
-			console.log(`Command ${index + 1}: ${command}`);
-		  });
+		} catch (error) {
+			console.log(`Error while processing client message: ${error}`);
+		}
 	});
+
+	ws.on('close', () =>{
+		console.log(`Client ${ws.uid} disconnected from port ${WS_CLIENT_PORT}`);
+		ws.uid = null;
+	});
+
+	// Handle errors
+	ws.on('error', (error) => {
+		console.error('WebSocket Client error:', error);
+	});
+
 });
-
-
-//Queuing and sending commands sent from the client to the device (Happens asynchronously)
-const processCommandQueue = async (device, ws) => {
-	while (device.commandQueue.length > 0 && ws.readyState === WebSocket.OPEN) {
-	  const command = device.commandQueue.shift();
-	  try {
-		await sendCommand(ws, command);
-		console.log(`Command sent to device: ${command}`);
-	  } catch (error) {
-		console.error('Failed to send command:', error);
-		// Requeue the command if sending failed
-		device.commandQueue.unshift(command);
-		break;
-	  }
-	}
-  };
   
-// Helper function to send command and await acknowledgment
-const sendCommand = (ws, command) => {
-return new Promise((resolve, reject) => {
-	ws.send(command, (error) => {
-	if (error) {
-		reject(error);
-	} else {
-		resolve();
-	}
-	});
-});
-};
-
-
-
-// Devices
-Object.entries(devices).forEach(([key, device]) => {  //Iterating through robot list
-	//const device = devices[key];
+//Devices
+//Iterating through robot list, key is the robotuid, device is the array containing the device info	
+Object.entries(devices).forEach(([deviceUid, device]) => { 
 	
 	//Creating a WS server for each device
 	const DeviceWss = new WebSocket.Server({port: device.port}, () => console.log(`Device WS Server is listening at ${device.port}`));
 	
 	DeviceWss.on('connection',(ws) => {	
 		
-		console.log(`Device connected on port ${device.port}`);
+		console.log(`Device ${deviceUid} connected on port ${device.port}`);
 		device.connectionStatus = "Connected";
-		processCommandQueue(device, ws); //Processes command queue
-
+		
+		// Event listener for new commands
+    	commandEmitter.on(deviceUid, () => {
+        	ws.send(device.commandQueue, (error) => {
+				if (error) console.log(`Failed to send command: ${error}`);
+				else device.commandQueue = null; //Consumes the command if it sends
+			});
+    	});
+		
 		//Processing messages from the device
 		ws.on('message', data => { 
 			
@@ -119,11 +105,14 @@ Object.entries(devices).forEach(([key, device]) => {  //Iterating through robot 
 
             //Process image
 			device.image = Buffer.from(Uint8Array.from(data)).toString('base64');
+			
+			//Broadcast to respective client
 
             //Broadcasts to all connected clients(change this)
 			ClientWss.clients.forEach(client => {
 				client.send(JSON.stringify({ image: device.image, connectionStatus: device.connectionStatus }));
 			});
+
 		});
 
 		//Handling Disconnections
@@ -132,6 +121,10 @@ Object.entries(devices).forEach(([key, device]) => {  //Iterating through robot 
 			device.connectionStatus = "Disconnected";
 		});
 
+		// Handle errors
+		ws.on('error', (error) => {
+			console.error('WebSocket Arduino error:', error);
+		});
 
 	});
 });
