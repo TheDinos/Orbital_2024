@@ -9,10 +9,15 @@
 #include "camera_pins.h"
 #include "camera_index.h"
 
+#define D7 7   // D8 OE
+#define D9 8   // D9 SCL
+#define D10 9  // D10 SDA
+
 const char* ssid = "ISD Surveillance Van";
 const char* password = "I love Shanmugam";
 
-const char* websocket_server_host = "192.168.211.48";
+// const char* websocket_server_host = "192.168.211.48";
+const char* websocket_server_host = "192.168.211.77";
 const uint16_t websocket_server_port1 = 8888;
 using namespace websockets;
 WebsocketsClient client;
@@ -20,7 +25,9 @@ WebsocketsClient client;
 TaskHandle_t Task1;
 TaskHandle_t Task2;
 
-unsigned long next_time = 1000;
+unsigned long Polling_Interval = 250;
+unsigned long Image_Interval = 1000;
+bool Enable_Polling = 0;
 
 int movement_state = 0;
 
@@ -56,7 +63,7 @@ void setupLedFlash(int pin);
 void setup() {
 
   // Setup Motors I2C and PWM
-  Wire.setPins(14, 13);
+  Wire.setPins(D10, D9);
   Serial.begin(115200);
   Wire.begin();
   pwm.begin();
@@ -172,90 +179,68 @@ void setup() {
   delay(500);
 }
 
-//Task1code: Image Streaming
+//Task1code: Client Polling and Movement Controls
 void Task1code(void* pvParameters) {
   Serial.print("Task1 running on core ");
   Serial.println(xPortGetCoreID());
 
   for (;;) {
-    // Streams images every 1s
-    if (millis() > next_time) {
-    Serial.println("Sending Image");
-      next_time = millis() + 1000;
+    if (Enable_Polling == 1 && millis() > Polling_Interval) {
+      Serial.println("Polling Client");
+      Polling_Interval = millis() + 250;
+      client.poll();
+      client.onMessage([](WebsocketsMessage msg) {
+        Serial.println("Received: " + msg.data());
 
+        if (msg.data() == "Stop") {
+          set_all_ready_1();
+        } else if (msg.data() == "Forward") {
+          forward_march_1();
+          forward_march_2();
+        } else if (msg.data() == "Backward") {
+          backward_march_1();
+          backward_march_2();
+        } else if (msg.data() == "Left") {
+          left_march();
+        } else if (msg.data() == "Right") {
+          right_march();
+        }
+      });
+    }
+  }
+}
+
+//Task2code: Image Streaming
+void Task2code(void* pvParameters) {
+  Serial.print("Task2 running on core ");
+  Serial.println(xPortGetCoreID());
+
+  for (;;) {
+    // Streams images every 1s
+    if (millis() > Image_Interval) {
+      Image_Interval = millis() + 1000;
+      Serial.print("Capturing Image... ");
+      Enable_Polling = 0;
       camera_fb_t* fb = esp_camera_fb_get();
       if (!fb) {
         esp_camera_fb_return(fb);
         return;
       }
 
-      if (fb->format != PIXFORMAT_JPEG) { return; }
+      if (fb->format != PIXFORMAT_JPEG) {
+        Serial.println();
+        Serial.println();
+        Serial.println("Error: Corrupted JPEG");
+        Serial.println();
+        return;
+      }
 
+      Serial.print("Sending Image... ");
       client.sendBinary((const char*)fb->buf, fb->len);
       esp_camera_fb_return(fb);
+      Serial.println("Image Sent");
+      Enable_Polling = 1;
     }
-  }
-}
-
-//Task2code: Client Polling and Movement Controls
-void Task2code(void* pvParameters) {
-  Serial.print("Task2 running on core ");
-  Serial.println(xPortGetCoreID());
-
-  for (;;) {
-    client.poll();
-    client.onMessage([](WebsocketsMessage msg) {
-      Serial.println("Received: " + msg.data());
-
-      if (msg.data() == "Stop") {
-        movement_state = 0;
-      } else if (msg.data() == "Forward") {
-        movement_state = 1;
-      } else if (msg.data() == "Backward") {
-        movement_state = 2;
-      } else if (msg.data() == "Left") {
-        movement_state = 3;
-      } else if (msg.data() == "Right") {
-        movement_state = 4;
-      }
-
-      // Stop
-      if (movement_state == 0) {
-        set_all_ready_1();
-      }
-
-      // Forward
-      else if (movement_state == 1) {
-        set_all_ready_1();
-        forward_march_1();
-        if (movement_state == 1) {
-          set_all_ready_2();
-          forward_march_2();
-        }
-      }
-
-      // Backward
-      else if (movement_state == 2) {
-        set_all_ready_1();
-        backward_march_1();
-        if (movement_state == 2) {
-          set_all_ready_2();
-          backward_march_2();
-        }
-
-        // Left
-        else if (movement_state == 3) {
-          set_all_ready_1();
-          left_march();
-        }
-
-        // Right
-        else if (movement_state == 4) {
-          set_all_ready_2();
-          right_march();
-        }
-      }
-    });
   }
 }
 
