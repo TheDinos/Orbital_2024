@@ -27,7 +27,6 @@ TaskHandle_t Task2;
 
 unsigned long Polling_Interval = 250;
 unsigned long Image_Interval = 1000;
-bool Enable_Polling = 0;
 
 int movement_state = 0;
 
@@ -68,7 +67,6 @@ void setup() {
   Wire.begin();
   pwm.begin();
   pwm.setPWMFreq(60);
-  set_all_ready_1();
   delay(500);
 
   // Setup Camera
@@ -160,7 +158,7 @@ void setup() {
   xTaskCreatePinnedToCore(
     Task1code, /* Task function. */
     "Task1",   /* name of task. */
-    10000,     /* Stack size of task */
+    20480, // 10000,     /* Stack size of task */
     NULL,      /* parameter of the task */
     1,         /* priority of the task */
     &Task1,    /* Task handle to keep track of created task */
@@ -171,7 +169,7 @@ void setup() {
   xTaskCreatePinnedToCore(
     Task2code, /* Task function. */
     "Task2",   /* name of task. */
-    10000,     /* Stack size of task */
+    20480, // 10000,     /* Stack size of task */
     NULL,      /* parameter of the task */
     1,         /* priority of the task */
     &Task2,    /* Task handle to keep track of created task */
@@ -185,7 +183,7 @@ void Task1code(void* pvParameters) {
   Serial.println(xPortGetCoreID());
 
   for (;;) {
-    if (Enable_Polling == 1 && millis() > Polling_Interval) {
+    if (millis() > Polling_Interval) {
       Serial.println("Polling Client");
       Polling_Interval = millis() + 250;
       client.poll();
@@ -193,7 +191,6 @@ void Task1code(void* pvParameters) {
         Serial.println("Received: " + msg.data());
 
         if (msg.data() == "Stop") {
-          set_all_ready_1();
         } else if (msg.data() == "Forward") {
           forward_march_1();
           forward_march_2();
@@ -220,7 +217,6 @@ void Task2code(void* pvParameters) {
     if (millis() > Image_Interval) {
       Image_Interval = millis() + 1000;
       Serial.print("Capturing Image... ");
-      Enable_Polling = 0;
       camera_fb_t* fb = esp_camera_fb_get();
       if (!fb) {
         esp_camera_fb_return(fb);
@@ -239,7 +235,6 @@ void Task2code(void* pvParameters) {
       client.sendBinary((const char*)fb->buf, fb->len);
       esp_camera_fb_return(fb);
       Serial.println("Image Sent");
-      Enable_Polling = 1;
     }
   }
 }
