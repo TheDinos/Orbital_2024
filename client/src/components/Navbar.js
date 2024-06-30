@@ -43,7 +43,7 @@ function Navbar(){
             </div>
 
             <Stack direction='row' spacing={2}>
-            <Button variant = 'outlined'color = 'inherit' component={Link} to="/Home">Get Started</Button>
+            <Button variant = 'outlined'color = 'inherit' component={Link} to="/Connect">Get Started</Button>
             </Stack>
 
           </Stack>

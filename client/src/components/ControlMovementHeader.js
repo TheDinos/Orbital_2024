@@ -1,5 +1,5 @@
 import React from 'react';
-import './Control.css'
+import './ControlMovementHeader.css'
 
 function MovementHeader() {
     return (

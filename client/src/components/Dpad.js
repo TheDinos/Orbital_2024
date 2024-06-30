@@ -1,6 +1,6 @@
 import React from 'react';
 import './Dpad.css'; // Import CSS file for styling
-import useWebSocketConnection from '../useWebsocket.js'
+import useWebSocketConnection from './UseWebsocket.js'
 
 
 function Dpad() { //dpad design taken from: https://codepen.io/tswone/pen/GLzZLd

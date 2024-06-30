@@ -2,17 +2,13 @@ import '../App.css';
 import  React, {useState} from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button'; 
-import { ListItemText, TextField } from '@mui/material';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
-import { useAuth } from "../firebaseAuth/authContext";
+import { useAuth } from "../firebaseAuth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import useWebSocketConnection from './useWebsocket';
+import useWebSocketConnection from './UseWebsocket';
 import CircularProgress from '@mui/material/CircularProgress';
-import './video.css'
+import './VideoLivestream.css'
 
 const RobotVideo = () => {
   const {deviceVideo} = useWebSocketConnection();
