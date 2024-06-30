@@ -1,4 +1,4 @@
-import '../App.css';
+import '../../App.css';
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -8,11 +8,11 @@ import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import './Intro.css'
-import BlogImage from '../images/BlogImage.jpg';
-import CCTVImage from '../images/CCTVImage.jpg';
-import ComImage from '../images/ComImage.jpg';
-import RDImage from '../images/RDImage.jpg';
-import LCImage from '../images/LCImage.jpg';
+import BlogImage from './images/BlogImage.jpg';
+import CCTVImage from './images/CCTVImage.jpg';
+import ComImage from './images/ComImage.jpg';
+import RDImage from './images/RDImage.jpg';
+import LCImage from './images/LCImage.jpg';
 import Paper from '@mui/material/Paper';
 
 function Intro() {

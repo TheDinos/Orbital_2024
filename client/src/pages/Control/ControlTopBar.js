@@ -1,5 +1,5 @@
 import  React, {useState} from 'react';
-import useWebSocketConnection from './UseWebsocket.js'
+import useWebSocketConnection from '../../components/UseWebsocket.js'
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,7 +12,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
-import { useAuth } from "../firebaseAuth/AuthContext.js"
+import { useAuth } from "../../firebaseAuth/AuthContext.js"
 import { useNavigate } from "react-router-dom";
 
 

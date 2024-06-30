@@ -1,9 +1,9 @@
 import './App.css';
 import {HashRouter as Router, Routes, Route} from 'react-router-dom';
-import Control from "./pages/Control";
+import Control from "./pages/Control/Control";
 import Connect from './pages/Connect';
 import Navbar from './components/Navbar';
-import Intro from './pages/Intro'
+import Intro from './pages/Intro/Intro'
 import PrivateRoute from './components/PrivateRoute';
 
 

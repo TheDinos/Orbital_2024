@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import useWebSocketConnection from './UseWebsocket';
+import useWebSocketConnection from '../../components/UseWebsocket';
 import CircularProgress from '@mui/material/CircularProgress';
 import './VideoLivestream.css'
 

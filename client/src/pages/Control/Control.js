@@ -1,7 +1,7 @@
-import Dpad from '../components/Dpad';
-import RobotVideo from '../components/VideoLivestream';
-import ControlBar from '../components/ControlTopBar';
-import ControlMovementHeader from '../components/ControlMovementHeader'
+import Dpad from './Dpad';
+import RobotVideo from './VideoLivestream';
+import ControlBar from './ControlTopBar';
+import ControlMovementHeader from './ControlMovementHeader'
 
 function TeleOperation(){
     return(

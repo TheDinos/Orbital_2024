@@ -37,7 +37,6 @@ function Navbar(){
 
           <Stack direction='row' spacing='2' sx={{ flexGrow: 1, justifyContent: 'space-between' }}>
             <div>
-            <Button color = 'inherit' component={Link} to="/">Guides</Button>
             <Button color = 'inherit' component={Link} to="/">Functionalities</Button>
             <Button color = 'inherit' component={Link} to="/">Blog</Button>
             </div>
