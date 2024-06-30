@@ -16,8 +16,7 @@
 const char* ssid = "ISD Surveillance Van";
 const char* password = "I love Shanmugam";
 
-// const char* websocket_server_host = "192.168.211.48";
-const char* websocket_server_host = "192.168.211.77";
+const char* websocket_server_host = "192.168.185.77";
 const uint16_t websocket_server_port1 = 8888;
 using namespace websockets;
 WebsocketsClient client;
@@ -25,7 +24,6 @@ WebsocketsClient client;
 TaskHandle_t Task1;
 TaskHandle_t Task2;
 
-unsigned long Polling_Interval = 250;
 unsigned long Image_Interval = 1000;
 
 int movement_state = 0;
@@ -70,8 +68,6 @@ void setup() {
   delay(500);
 
   // Setup Camera
-  while (!Serial)
-    ;
   Serial.setDebugOutput(true);
   Serial.println();
 
@@ -137,7 +133,6 @@ void setup() {
 
   WiFi.begin(ssid, password);
   WiFi.setSleep(false);
-  // while (WiFi.status() != WL_CONNECTED)
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
     Serial.println("Attempting WiFi Connection");
     delay(500);
@@ -158,7 +153,7 @@ void setup() {
   xTaskCreatePinnedToCore(
     Task1code, /* Task function. */
     "Task1",   /* name of task. */
-    20480, // 10000,     /* Stack size of task */
+    20480,     // 10000,     /* Stack size of task */
     NULL,      /* parameter of the task */
     1,         /* priority of the task */
     &Task1,    /* Task handle to keep track of created task */
@@ -169,7 +164,7 @@ void setup() {
   xTaskCreatePinnedToCore(
     Task2code, /* Task function. */
     "Task2",   /* name of task. */
-    20480, // 10000,     /* Stack size of task */
+    20480,     // 10000,     /* Stack size of task */
     NULL,      /* parameter of the task */
     1,         /* priority of the task */
     &Task2,    /* Task handle to keep track of created task */
@@ -183,27 +178,24 @@ void Task1code(void* pvParameters) {
   Serial.println(xPortGetCoreID());
 
   for (;;) {
-    if (millis() > Polling_Interval) {
-      Serial.println("Polling Client");
-      Polling_Interval = millis() + 250;
-      client.poll();
-      client.onMessage([](WebsocketsMessage msg) {
-        Serial.println("Received: " + msg.data());
+    Serial.println("Polling Client");
+    client.poll();
+    client.onMessage([](WebsocketsMessage msg) {
+      Serial.println("Received: " + msg.data());
 
-        if (msg.data() == "Stop") {
-        } else if (msg.data() == "Forward") {
-          forward_march_1();
-          forward_march_2();
-        } else if (msg.data() == "Backward") {
-          backward_march_1();
-          backward_march_2();
-        } else if (msg.data() == "Left") {
-          left_march();
-        } else if (msg.data() == "Right") {
-          right_march();
-        }
-      });
-    }
+      if (msg.data() == "Stop") {
+      } else if (msg.data() == "Forward") {
+        forward_march_1();
+        forward_march_2();
+      } else if (msg.data() == "Backward") {
+        backward_march_1();
+        backward_march_2();
+      } else if (msg.data() == "Left") {
+        left_march();
+      } else if (msg.data() == "Right") {
+        right_march();
+      }
+    });
   }
 }
 
