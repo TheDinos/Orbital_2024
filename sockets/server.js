@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const WebSocket = require('ws');
 const { v4: uuidv4 } = require('uuid');
+const {verifyToken} = require('./auth'); //Importing the verify token function from auth file
 const EventEmitter = require('events');
 const commandEmitter = new EventEmitter();
 
@@ -22,14 +23,6 @@ let devices = {  //Stores array of robots and their infos
 			}, 
 };
 
-process.on('uncaughtException', (error, origin) => {  //Handling exceptions
-	console.log('----- Uncaught exception -----');
-	console.log(error);
-	console.log('----- Exception origin -----');
-	console.log(origin);
-	console.log('----- Status -----');
-});
-
 // Clients
 
 //Giving a unique ID to each client connected
@@ -41,8 +34,27 @@ const addClients = (ws) =>{
 const ClientWss = new WebSocket.Server({port: WS_CLIENT_PORT}, () => console.log(`Client WS Server is listening at ${WS_CLIENT_PORT}`)); 
 
 //Handles Client Connections 
-ClientWss.on('connection', ws => {  
-	console.log('hi');
+ClientWss.on('connection', async (ws, request) => {  
+	//Extract Token from URL
+	const urlParams = new URLSearchParams(request.url.replace('/?', ''));
+	const token = urlParams.get('token');
+	if (!token) { //If there is no token, does not establish a connection
+		console.log('Token not found');
+		ws.close();
+		return;
+	}	
+
+	//Verify the token
+	const decodedToken = await verifyToken(token);
+	if (!decodedToken) { //If there is an error verifying the token, null is returned and a connection is not established
+		console.log('Token not valid');
+		ws.close();
+		return;
+	}
+
+	console.log('client verified');
+
+	//Add clients, associate them with a unique ID
 	addClients(ws); 
 	console.log(`Client ${ws.uid} connected.`);
 

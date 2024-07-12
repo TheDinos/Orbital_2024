@@ -12,13 +12,13 @@ const useWebSocketConnection = () => {
   useEffect(() => {
     (async () => {
       try {
-        // Obtain Firebase ID token
-        const user = auth.currentUser;
+        // Obtain Firebase ID token   
+        const user = auth.currentUser;  
         if (user) {
           const idToken = await user.getIdToken();
 
         // Construct WebSocket URL and set it
-        const wsUrl = `ws://localhost:8080?token=${idToken}`;
+        const wsUrl = `ws://localhost:8999?token=${idToken}`;
         setSocketUrl(wsUrl);
         }
         else {
