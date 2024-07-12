@@ -1,12 +1,36 @@
 import { useState, useEffect} from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket'; 
-
+import {auth} from '../firebaseAuth/FirebaseConfig';
 
 const useWebSocketConnection = () => {
   const [deviceVideo, setDeviceVideo] = useState({}); //Stores data received from devices via websocket (Video feed)
   const [deviceStatus, setDeviceStatus] = useState("Disconnected");
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket('ws://localhost:8999/'); //Change the url 
+  const [socketUrl, setSocketUrl] = useState(null);
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl); 
+
+  useEffect(() => {
+    (async () => {
+      try {
+        // Obtain Firebase ID token
+        const user = auth.currentUser;
+        if (user) {
+          const idToken = await user.getIdToken();
+
+        // Construct WebSocket URL and set it
+        const wsUrl = `ws://localhost:8080?token=${idToken}`;
+        setSocketUrl(wsUrl);
+        }
+        else {
+          console.error('No user is signed in.');
+        }
+      }  
+      catch (error) {
+        console.error('Error fetching Firebase ID token:', error);
+      }
+      })();
+      } ,[]);
+  
 
   useEffect(() => {  //Runs when a new message is received (when lastMessage changes)
     if (lastMessage !== null) { //Checks that its a valid message

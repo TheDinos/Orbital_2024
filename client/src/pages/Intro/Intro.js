@@ -60,12 +60,10 @@ function Intro() {
                 textAlign: 'justify',
                 textJustify: 'inter-word',
                 }}>
-                    Allows families to dynamically and remotely keep track of live, home conditions while away at work or holiday.
+                    RHM allows families to dynamically and remotely keep track of live, home conditions while away at work or holiday.
+                    We aim to give families a peace of mind when they leave their homes.
                 </Typography>
             </CardContent>
-            <CardActions>
-                <Button size="small">Learn More</Button>
-            </CardActions>
         </Card>   
 
         <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: 'column'}}>
@@ -83,13 +81,10 @@ function Intro() {
                 textAlign: 'justify',
                 textJustify: 'inter-word',
                 }}>
-                    The robot comes in the shape of the dog which helps 
+                    The robot is shaped like a dog which helps 
                     alleviates loneliness through daily interactions with the elderly, or occupies young children.
                 </Typography>
             </CardContent>
-            <CardActions>
-                <Button size="small">Learn More</Button>
-            </CardActions>
         </Card>  
         
         <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: 'column'}}>
@@ -111,9 +106,6 @@ function Intro() {
                 minimally one per room. This can result in high expenditures.
             </Typography>
         </CardContent>
-        <CardActions>
-            <Button size="small">Learn More</Button>
-        </CardActions>
         </Card>   
     </Stack>
 
@@ -152,9 +144,6 @@ function Intro() {
                 Only one is required to patrol an apartment.
             </Typography>
         </CardContent>
-        <CardActions>
-            <Button size="small">Learn More</Button>
-        </CardActions>
         </Card>   
 
         <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: 'column'}}>
@@ -175,9 +164,6 @@ function Intro() {
                Gesture recognition also allows the platform to function as a “toy”, reducing potential discomfort surrounding the robot. 
             </Typography>
         </CardContent>
-        <CardActions>
-            <Button size="small">Learn More</Button>
-        </CardActions>
         </Card>  
         
         <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: 'column'}}>
@@ -199,9 +185,6 @@ function Intro() {
                 minimally one per room. This can result in high expenditures.
             </Typography>
         </CardContent>
-        <CardActions>
-            <Button size="small">Learn More</Button>
-        </CardActions>
         </Card>   
     </Stack>        
     </div>

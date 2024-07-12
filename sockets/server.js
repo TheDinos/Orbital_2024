@@ -42,7 +42,7 @@ const ClientWss = new WebSocket.Server({port: WS_CLIENT_PORT}, () => console.log
 
 //Handles Client Connections 
 ClientWss.on('connection', ws => {  
-	
+	console.log('hi');
 	addClients(ws); 
 	console.log(`Client ${ws.uid} connected.`);
 
