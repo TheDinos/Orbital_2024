@@ -1,0 +1,5 @@
+.content-animation {
+    animation: fade-out linear;
+    animation-timeline: view();
+    animation-range: exit -200px;
+}
