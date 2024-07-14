@@ -3,3 +3,29 @@
     animation-timeline: view();
     animation-range: exit -200px;
 }
+
+.redmulticolored-text {
+    background: linear-gradient(90deg, #ff4e50, #fc913a);
+    -webkit-background-clip: text;
+    background-clip: text; 
+    color: transparent; 
+}
+
+.purplemulticolored-text {
+    background: linear-gradient(90deg, #4b0082, #9400d3, #0000ff, #8a2be2, #6a5acd, #7b68ee);
+    -webkit-background-clip: text;
+    background-clip: text; 
+    color: transparent;
+}
+
+.section1 {
+    background-color: #111111; /* Different shade of black for section 3 */
+}
+
+.section2 {
+    background-color: #161616; /* Different shade of black for section 3 */
+}
+
+.section3 {
+    background-color: #1c1c1c; /* Different shade of black for section 3 */
+}

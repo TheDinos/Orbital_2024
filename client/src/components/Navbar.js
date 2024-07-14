@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import SmartToySharpIcon from '@mui/icons-material/SmartToySharp';
 import Stack from '@mui/material/Stack';
 import {Link , useLocation} from 'react-router-dom';
+import {HashLink} from 'react-router-hash-link';
 
 function Navbar(){
     const location = useLocation();
@@ -37,8 +38,8 @@ function Navbar(){
 
           <Stack direction='row' spacing='2' sx={{ flexGrow: 1, justifyContent: 'space-between' }}>
             <div>
-            <Button color = 'inherit' component={Link} to="/id:section1">Why us?</Button>
-            <Button color = 'inherit' component={Link} to="/">Quick Guide</Button>
+            <Button color = 'inherit' component={HashLink} to="/#section2">Why us?</Button>
+            <Button color = 'inherit' component={HashLink} to="/#section3">Quick Guide</Button>
             </div>
 
             <Stack direction='row' spacing={2}>

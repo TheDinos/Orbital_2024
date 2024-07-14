@@ -1,18 +1,18 @@
 import React from 'react';
 import { Container, Grid, Typography, Box } from '@mui/material';
 import { styled } from '@mui/system';
-import RobotDogImage from './RobotDogImage.png'
+import RobotDogImage from './RobotDogImage.png';
+import SecureHomeImage from './SecureHomeImage.png';
+import './AboutUs.css';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import '../Intro/Intro.css'
-import BlogImage from './images/BlogImage.jpg';
 import CCTVImage from './images/CCTVImage.jpg';
 import ComImage from './images/ComImage.jpg';
 import RDImage from './images/RDImage.jpg';
 import LCImage from './images/LCImage.jpg';
-import Paper from '@mui/material/Paper';
 
 const PageContainer = styled(Container)({ //Container for the entire page
   backgroundColor: 'black',
@@ -42,12 +42,13 @@ const Image = styled('img')({ //Image has a 1:1 aspect ratio
 });
 
 const CustomCard = styled(Card)({
-    minWidth: 275,
-    maxWidth: 345,
-    minHeight: 150,
+    minWidth: 350,
+    maxWidth: 350,
+    minHeight: 350,
+    maxheight: 350,
     margin: '20px',
     textAlign: 'justify',
-  });
+});
 
 const Media = styled(CardMedia)({
     height: 180,
@@ -81,13 +82,11 @@ function AboutUs() {
         media: RDImage,
     },
     ];
-
-    
     
     return (
     <PageContainer>
         {/*First Section: Quick intro*/}
-        <Section id="section1">
+        <Section className="section1">
 
         <Grid container spacing={1} justifyContent="center" alignItems="center">
             <Grid item xs={12} md={6}> {/*Two seperate grid containers for text and Image */}
@@ -112,77 +111,76 @@ function AboutUs() {
         </Section>
 
         {/*Second Section: Benefits*/}
-       <Section id="section2">
-
-        {/*Header for Section 2*/}
-        <Paper elevation={3}
-            sx={{ padding: 2, 
-                background: 'rgba(255, 255, 255, 0.6)', 
-                width: 1100, 
-                textAlign: 'center',
-                marginBottom: "20px"
-                }}
-            >
-                <Typography
-                    variant="h5" // Adjust variant based on your needs
-                    sx={{
-                        fontFamily: 'Arial, sans-serif',
-                        fontWeight: '700', // '900' for Black weight
-                        fontSize: '36px', // Font size 36
-                        color: 'rgb(44, 45, 46)', // Black color
-                    }}>
-                Why Choose OUR Product?
-                </Typography>
-        </Paper>
+       <Section id="section2" className="section2">
         
-        {/*Grid for 2x2 card content*/}
-        <Grid container spacing={1} justifyContent="center" alignItems='center' >
-            {cards.map((card, index) => (
-            <Grid item key={index} xs={12} md={6}>
-                <CustomCard>
-                    <Media
-                    component="img"
-                    image={card.media}
-                    alt="Card Media"
-                    />
-                    <CardContent>
-                    <Typography variant="h5" component="div" gutterBottom>
-                        {card.title}
-                    </Typography>
-                    <Typography variant="body2">
-                        {card.content}
-                    </Typography>
-                    </CardContent>
-                </CustomCard>
+        {/*Grid container*/}
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
+            {/* Left side (title) */}
+            <Grid item xs={12} md={6} gutterBottom align="center">
+                <Typography variant="h3" fontWeight="bold" gutterBottom>
+                Why Choose <span className="redmulticolored-text">OUR</span> Product?
+                </Typography>
+                <Typography variant="h6">
+                It comes down to four essential features for every household.
+                </Typography>
             </Grid>
-            ))}
+
+        {/* Right side (2x2 grid of cards) */}
+        <Grid item container xs={12} md={6} spacing={2} justifyContent="center" alignItems="center">
+        {cards.map((card, index) => (
+            <Grid key={index} item xs={6} style={{ display: 'flex', justifyContent: 'center' }}>
+            <CustomCard>
+                <Media component="img" image={card.media} alt="Card Media"/>
+                <CardContent>
+                
+                <Typography variant="h5" component="div" gutterBottom style={{ fontWeight: 'bold', fontSize: '24px', fontFamily: 'sans-serif' }}>
+                    {card.title}
+                </Typography>
+                <Typography variant="body2" style={{ fontSize: '16px', fontFamily: 'sans-serif' }}>
+                    {card.content}
+                </Typography>
+                </CardContent>
+            </CustomCard>
+            </Grid>
+        ))}
         </Grid>
+    </Grid>
        </Section>
 
 
         {/*Third Section: Quick start*/}
-        <Section id="section3">
+        <Section id="section3" className="section3">
+
+        {/*Header for Section 2*/}
+        <Typography
+        variant="h2" // Adjust variant based on your needs
+        sx={{
+          fontFamily: 'Arial, sans-serif',
+          fontWeight: '900', // Black weight
+          fontSize: '48px', // Larger font size
+          color: 'rgba(255, 255, 255, 0.9)', // Standout color against dark background
+        }}
+      >
+        <span className="purplemulticolored-text">Secure</span> your family's safety, starting today
+      </Typography>
+
 
         <Grid container spacing={1} justifyContent="center" alignItems="center">
             <Grid item xs={12} md={6}>
                 <Box display="flex" justifyContent="center" alignItems="center">
-                    <Image src={RobotDogImage} alt="Robot Dog Image" />
+                    <Image src={SecureHomeImage} alt="Robot Dog Image" />
                 </Box>
             </Grid>
             
             <Grid item xs={12} md={6}> {/*Two seperate grid containers for text and Image */}
                 <Box padding="150px"> {/* Moves the text closer to the centre*/}
-                <Typography variant="h3" fontWeight="bold" gutterBottom>
-                    How to get started
-                    </Typography>
-                    <Typography variant="body1" component="div">
-
-                        <Typography variant="h6" gutterBottom>
+                    <Typography variant="body1" component="div" sx={{ fontSize: '18px', textAlign: 'justify', lineHeight: 1.6 }}>
+                        <Typography variant="h3" fontWeight="bold" gutterBottom>
                             Basic Operation
                         </Typography>
                         <ul>      
-                            <li>Turn on the robot.</li>
-                            <li>Enter the web application, and navigate to the ‘Login’ page.</li>
+                            <li>Ensure that your robot is turned on.</li>
+                            <li>Click on the "Connect to Robot" button located on the top right of the page.</li>
                             <li>Enter the credentials of the robot and click ‘Connect’.</li>
                             <li>
                             Once successfully connected, the robot’s movement can be controlled,
@@ -195,7 +193,7 @@ function AboutUs() {
                         </ul>
 
 
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h3" fontWeight="bold" gutterBottom>
                             Advanced Operations
                         </Typography>
                         <ul>
