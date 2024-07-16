@@ -1,28 +1,24 @@
 import React from 'react';
+import Section1 from './Section1/Section1';
+import Section2 from './Section2/Section2';
 import { Container, Grid, Typography, Box } from '@mui/material';
 import { styled } from '@mui/system';
-import RobotDogImage from './RobotDogImage.png';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import SecureHomeImage from './SecureHomeImage.png';
 import './AboutUs.css';
 
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import '../Intro/Intro.css'
-import CCTVImage from './images/CCTVImage.jpg';
-import ComImage from './images/ComImage.jpg';
-import RDImage from './images/RDImage.jpg';
-import LCImage from './images/LCImage.jpg';
+
 
 const PageContainer = styled(Container)({ //Container for the entire page
-  backgroundColor: 'black',
-  minHeight: '100vh',
-  minWidth: '100vw',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  color: 'white',
+    background: 'linear-gradient(90deg, #12100e, #2d3436, #434343)',
+    minHeight: '100vh',
+    minWidth: '100vw',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
 });
 
 const Section = styled(Box)({ //Container for each section of the page
@@ -32,120 +28,40 @@ const Section = styled(Box)({ //Container for each section of the page
     flexDirection:'column',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '20px',
   });
 
 const Image = styled('img')({ //Image has a 1:1 aspect ratio
-  maxWidth: '60%', 
-  height: 'auto',
-  borderRadius: '20px', 
+    maxWidth: '60%', 
+    height: 'auto',
+    borderRadius: '20px', 
 });
 
-const CustomCard = styled(Card)({
-    minWidth: 350,
-    maxWidth: 350,
-    minHeight: 350,
-    maxheight: 350,
-    margin: '20px',
-    textAlign: 'justify',
-});
 
-const Media = styled(CardMedia)({
-    height: 180,
+const theme = createTheme({
+    typography: {
+      fontFamily: 'Canva Sans', //Default font
+      h1: { fontFamily: 'Archivo Black',},
+      h2: {fontFamily: 'Canva Sans',},
+      body1: {fontFamily: 'Canva Sans',},
+      body2: {fontFamily: 'Poppins',},
+    },
 });
 
 function AboutUs() {
-    // Array containing card data for section 2 
-    const cards = [
-    {
-        title: 'Surveillance',
-        content:
-        'RHM allows families to dynamically and remotely keep track of live, home conditions while away at work or holiday. We aim to give families a peace of mind when they leave their homes.',
-        media: CCTVImage,
-    },
-    {
-        title: 'Companionship',
-        content:
-        'The robot is shaped like a dog which helps alleviates loneliness through daily interactions with the elderly, or occupies young children.',
-        media: ComImage,
-    },
-    {
-        title: 'Low Cost',
-        content:
-        'The platform is made using cheap, common components and is no larger than a shoe. Only one is required to patrol an apartment.',
-        media: LCImage,
-    },
-    {
-        title: 'Reduced Discomfort',
-        content:
-        'Gesture recognition also allows the platform to function as a “toy”, reducing potential discomfort surrounding the robot. ',
-        media: RDImage,
-    },
-    ];
-    
+
     return (
+    <ThemeProvider theme={theme}> {/*Elements wrapped will be able to use the predefined fonts*/}
     <PageContainer>
         {/*First Section: Quick intro*/}
-        <Section className="section1">
-
-        <Grid container spacing={1} justifyContent="center" alignItems="center">
-            <Grid item xs={12} md={6}> {/*Two seperate grid containers for text and Image */}
-                <Box padding="150px"> {/* Moves the text closer to the centre*/}
-                    <Typography variant="h3"  fontWeight="bold" gutterBottom>
-                    Robotic Home Monitoring
-                    </Typography>
-                    <Typography variant="h6">
-                    Your one stop solution for safe, secure and affordable home security.
-                    The leading choice for families.
-                    </Typography>
-                </Box>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-                <Box display="flex" justifyContent="center" alignItems="center">
-                    <Image src={RobotDogImage} alt="Robot Dog Image" />
-                </Box>
-            </Grid>
-        </Grid>
-
+        <Section>
+            <Section1/>
         </Section>
+        
 
         {/*Second Section: Benefits*/}
-       <Section id="section2" className="section2">
-        
-        {/*Grid container*/}
-        <Grid container spacing={2} justifyContent="center" alignItems="center">
-            {/* Left side (title) */}
-            <Grid item xs={12} md={6} gutterBottom align="center">
-                <Typography variant="h3" fontWeight="bold" gutterBottom>
-                Why Choose <span className="redmulticolored-text">OUR</span> Product?
-                </Typography>
-                <Typography variant="h6">
-                It comes down to four essential features for every household.
-                </Typography>
-            </Grid>
-
-        {/* Right side (2x2 grid of cards) */}
-        <Grid item container xs={12} md={6} spacing={2} justifyContent="center" alignItems="center">
-        {cards.map((card, index) => (
-            <Grid key={index} item xs={6} style={{ display: 'flex', justifyContent: 'center' }}>
-            <CustomCard>
-                <Media component="img" image={card.media} alt="Card Media"/>
-                <CardContent>
-                
-                <Typography variant="h5" component="div" gutterBottom style={{ fontWeight: 'bold', fontSize: '24px', fontFamily: 'sans-serif' }}>
-                    {card.title}
-                </Typography>
-                <Typography variant="body2" style={{ fontSize: '16px', fontFamily: 'sans-serif' }}>
-                    {card.content}
-                </Typography>
-                </CardContent>
-            </CustomCard>
-            </Grid>
-        ))}
-        </Grid>
-    </Grid>
-       </Section>
+        <Section id="section2">
+            <Section2/>
+        </Section>
 
 
         {/*Third Section: Quick start*/}
@@ -214,6 +130,7 @@ function AboutUs() {
 
         </Section>
     </PageContainer>
+    </ThemeProvider>
   );
 }
 
