@@ -1,8 +1,8 @@
 import React from 'react';
 import {Grid, Typography, Box } from '@mui/material';
 import { styled } from '@mui/system';
-import Section1TextBG from './Section1TextBG.png';
-import RobotDogImage from './RobotDogImage.png'
+import Section1TextBG from './images/Section1TextBG.png';
+import RobotDogImage from './images/RobotDogImage.png'
 
 
 const ContentContainer = styled(Box)({
@@ -38,7 +38,7 @@ function Section1() {
     return (
     <Grid container spacing={3} justify="center" alignItems="center">
     {/* Grid item for the text */}
-        <Grid item xs={12} sm={5} md={5} >
+        <Grid item xs={12} sm={5} md={5}  >
         <ContentContainer>
             <Typography variant="h1" component="h1" gutterBottom style={{ fontSize: '60px', marginBottom: '50px'}}>
                 Robotic Home Monitoring

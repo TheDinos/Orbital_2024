@@ -11,10 +11,10 @@ import RDImage from './images/RDImage.jpg';
 import LCImage from './images/LCImage.jpg';
 
 const CustomCard = styled(Card)({
-    minWidth: 350,
-    maxWidth: 350,
-    minHeight: 350,
-    maxheight: 350,
+   // minWidth: 350,   //Adding these will make the "Surveillance" card a different dimension
+   // maxWidth: 350,
+    minHeight: 300,
+    maxheight: 300,
     margin: '20px',
     textAlign: 'justify',
     border: '20px solid #f2f1eb',
@@ -57,17 +57,18 @@ function Section2() {
             media: RDImage,
         },
         ];
+
     return (
     <div> 
     {/*Title*/}
-    <Typography variant="h1" fontWeight="bold" gutterBottom>
+    <Typography variant="h1" fontWeight="bold" style={{ textAlign: 'center'}} gutterBottom>
         Why Choose <span className="redmulticolored-text">RHM</span>?
     </Typography>        
         
     {/*Cards*/}
-    <Grid container spacing={12} justifyContent="center" alignItems="center">
+    <Grid container spacing={9} justifyContent="center" alignItems="center">
         {cards.map((card, index) => (
-            <Grid key={index} item xs={12} sm={3} md={3} style={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid key={index} item xs={12} sm={4} md={3} style={{ display: 'flex', justifyContent: 'center' }}>
                 <CustomCard>
                     <Media component="img" image={card.media} alt="Card Media" />
                     <CustomCardContent>
