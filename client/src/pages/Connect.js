@@ -1,17 +1,22 @@
-import '../App.css';
-import  React, {useState} from 'react';
+import React, { useState } from 'react';
+import { Box, Container, IconButton, Collapse, Alert } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button'; 
+import Button from '@mui/material/Button';
 import { TextField } from '@mui/material';
-import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
-import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from "../firebaseAuth/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { styled } from '@mui/system';
 
-
+const PageContainer = styled(Container)({ //Container for the entire page
+    background: 'linear-gradient(90deg, #12100e, #2d3436, #434343)',
+    minHeight: '100vh',
+    minWidth: '100vw',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingTop: '120px'
+});
 
 function Connect(){
     const {login} = useAuth();
@@ -19,7 +24,6 @@ function Connect(){
     const [connectError, setConnectError] = useState(false); //Sets to true when there is a connection error
     const [loginError, setLoginError] = useState(false); //Sets to true when there is a login error
     const [loginErrorMsg, setLoginErrorMsg] = useState("");
-
 
     const [robotId, setRobotId] = useState('');
     const [robotPw, setRobotPw] = useState('');
@@ -32,7 +36,7 @@ function Connect(){
         catch (error) {
             //console.log(error.code);
             if (error.code === 'auth/invalid-email') {
-                setLoginErrorMsg("This robotId doesn't exist");
+                setLoginErrorMsg("RobotId doesn't exist");
                 setLoginError(true);
             } else if (error.code === 'auth/invalid-credential') {
                 setLoginErrorMsg("Wrong password");
@@ -43,10 +47,8 @@ function Connect(){
     };
 
     return(
-        <div className="App">
-            <header className="App-header">
-                <h1>Connect to Robot</h1>
-                
+        <PageContainer>
+            <Box  sx={{width: { xs: '70vw', md: '30vw' }}}> {/*50% of viewport width on extra-small screens, 25% on medium and larger screens*/}
                 <Collapse in={connectError || loginError}>
                     <Alert
                         icon={false}
@@ -63,23 +65,24 @@ function Connect(){
                         <CloseIcon fontSize="inherit" />
                         </IconButton>
                         }
-                    sx={{ mb: 2 }}>
+                    sx={{ mb: 2, fontSize: '18px', borderRadius: 3}}>
                         {(loginError) ? loginErrorMsg : 
                          (connectError) ? "Unable to establish robot connection." : ""}
                     </Alert>
                 </Collapse>                  
                 
                 <Box 
-                    paddingLeft={5} paddingRight={5} paddingTop={5}
+                    padding={6}
                     sx={{
-                        width: { xs: '70vw', md: '25vw' }, // 50% of viewport width on extra-small screens, 25% on medium and larger screens
                         aspectRatio: '4 / 3',
-                        borderRadius: 2,
+                        borderRadius: 8,
                         bgcolor: '#DCDCDC',
-                    }} >
+                    }} >                    
                     
                     <Stack spacing={6} direction="column">
-                        
+
+                        <h1 style={{color: '#0000000', fontStyle: 'Poppins', fontSize: '55px'}}>Connect to Robot</h1>
+
                         <TextField 
                         required
                         label = "Robot ID" 
@@ -103,17 +106,14 @@ function Connect(){
                         <Button 
                             size="large" 
                             variant="contained" 
-                            //component={Link} to="/control" 
                             onClick={handleConnect}
-                           // loading = {loading};
                             sx={{width:'100%', fontSize:'100%'}}>
                         Connect
                         </Button>
                     </Stack>
-                    
                 </Box>
-                </header>
-            </div>
-    );
+                </Box>
+        </PageContainer>
+        );
 }
 export default Connect;
