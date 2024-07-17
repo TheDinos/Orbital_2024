@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Grid, Typography, Box } from '@mui/material';
+import {Container, Typography, Box } from '@mui/material';
 import { styled } from '@mui/system';
 import './Section3.css'
 import SecureHomeImage from './images/SecureHomeImage.png'
@@ -28,6 +28,15 @@ const StyledList = styled('ul')({
     },
 });
 
+const WhiteBox = styled(Box)({
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: '#f2f1eb',
+    padding: '10px',
+    borderRadius: '8px',
+    marginBottom: '10px',
+});
+
 function Section3() {
     return (
         <Container maxWidth={false}  style={{display: 'flex', flexDirection: 'column'}}>
@@ -39,9 +48,11 @@ function Section3() {
         
         <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }}>
             <Box display="flex" flexDirection='column' flexbasis='40%'  padding='20px'>
-                <Typography variant="h2" component="h2" mb={2}>
-                    Start your journey here...
-                </Typography>
+                <WhiteBox>
+                    <Typography variant="h2" component="h2" mb={2} style={{color:'#004aad'}}>
+                        Start your journey here...
+                    </Typography>
+                </WhiteBox>
                 <StyledList>
                     <li>Turn on your robot.</li>
                     <li>Navigate to the Login page by clicking on the "Connect to Robot" button.</li>
@@ -63,9 +74,11 @@ function Section3() {
             </ImageContainer>
             
             <Box display="flex" flexDirection='column' flexbasis='40%' padding='20px' marginLeft='50px' marginTop='80px'>
-                <Typography variant="h2" component="h2" mb={2}>
-                    Ready for more ???
-                </Typography>
+                <WhiteBox>  
+                    <Typography variant="h2" component="h2" mb={2} style={{color:'#004aad'}}>
+                        Ready for more ???
+                    </Typography>
+                </WhiteBox>  
                 <StyledList>
                     <li>Set the robot to automatically patrol the house at specific timings.</li>
                     <li>Enable ‘Play’ mode which allows for dynamic human-robot interaction.</li>

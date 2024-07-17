@@ -24,13 +24,13 @@ const ImageContainer = styled(Box)({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
+    height: '100vh',
 });
 
 const StyledImage = styled('img')({
-    maxHeight: '100%',
-   // height: 'auto',
-    objectFit: 'cover', //Ensures the image covers the entire space while maintaining aspect ratio
+    height: '100%',
+    width: 'auto',
+    objectFit: 'contain',
 });
 
 function Section1() {
@@ -51,7 +51,7 @@ function Section1() {
 
         <Grid item xs={12} sm={7} md={7} >
             <ImageContainer>
-                <StyledImage src={RobotDogImage} alt="Robotic Home Monitoring" style={{ maxWidth: '100%', height: 'auto' }} />
+                <StyledImage src={RobotDogImage} alt="Robotic Home Monitoring"/>
             </ImageContainer>
         </Grid>
     </Grid>
