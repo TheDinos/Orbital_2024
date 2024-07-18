@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Container, IconButton, Collapse, Alert } from '@mui/material';
+import { Box, Container, IconButton, Collapse, Alert} from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { TextField } from '@mui/material';
@@ -17,6 +17,17 @@ const PageContainer = styled(Container)({ //Container for the entire page
     alignItems: 'center',
     paddingTop: '120px'
 });
+
+const h1Style = { //Style for header
+    color: '#000000',
+    fontFamily: 'Poppins, sans-serif',
+    fontSize: '50px',
+    fontWeight: 'normal',
+    display: 'flex',
+    justifyContent: 'center', 
+    alignItems: 'center',   
+    textAlign: 'center', 
+};
 
 function Connect(){
     const {login} = useAuth();
@@ -65,7 +76,7 @@ function Connect(){
                         <CloseIcon fontSize="inherit" />
                         </IconButton>
                         }
-                    sx={{ mb: 2, fontSize: '18px', borderRadius: 3}}>
+                    sx={{ mb: 2, fontSize: '18px', borderRadius: 3, textAlign:'center', color: '#000000',  fontFamily: 'Poppins, sans-serif'}}>
                         {(loginError) ? loginErrorMsg : 
                          (connectError) ? "Unable to establish robot connection." : ""}
                     </Alert>
@@ -81,12 +92,12 @@ function Connect(){
                     
                     <Stack spacing={6} direction="column">
 
-                        <h1 style={{color: '#0000000', fontStyle: 'Poppins', fontSize: '55px'}}>Connect to Robot</h1>
+                        <h1 style={h1Style}> Connect to Robot</h1>
 
                         <TextField 
                         required
                         label = "Robot ID" 
-                        colour = "secondary"
+                        color = "secondary"
                         type = "username"
                         margin = "normal" 
                         value = {robotId}
@@ -96,7 +107,7 @@ function Connect(){
                         <TextField 
                         required
                         label = "Password" 
-                        colour = "secondary"
+                        color = "secondary"
                         type = "password"
                         margin = "normal" 
                         value = {robotPw}
@@ -107,7 +118,7 @@ function Connect(){
                             size="large" 
                             variant="contained" 
                             onClick={handleConnect}
-                            sx={{width:'100%', fontSize:'100%'}}>
+                            sx={{width:'100%', fontSize:'25px', fontFamily: 'Poppins, sans-serif',}}>
                         Connect
                         </Button>
                     </Stack>
