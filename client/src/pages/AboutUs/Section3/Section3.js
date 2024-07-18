@@ -5,8 +5,6 @@ import './Section3.css'
 import SecureHomeImage from './images/SecureHomeImage.png'
 import SecureHomeImage2 from './images/SecureHomeImage2.png'
 
-
-
 const ImageContainer = styled(Box)({
     display: 'flex',
     justifyContent: 'center',
@@ -23,7 +21,7 @@ const StyledList = styled('ul')({
     listStyleType: 'disc',
     '& li': {
       marginBottom: '8px',
-      fontSize: '22px', // Adjust font size as needed
+      fontSize: '18px', // Adjust font size as needed
       lineHeight: '1.3',
     },
 });
@@ -32,16 +30,22 @@ const WhiteBox = styled(Box)({
     display: 'flex',
     alignItems: 'center',
     backgroundColor: '#f2f1eb',
-    padding: '10px',
+    padding: '20px',
     borderRadius: '8px',
     marginBottom: '10px',
+});
+
+const WhiteBoxText = styled(Typography)({
+    color: '#004aad',
+    fontWeight: 'bold',
+    fontSize: '45px',
 });
 
 function Section3() {
     return (
         <Container maxWidth={false}  style={{display: 'flex', flexDirection: 'column'}}>
         <Box textAlign="center" mb={4}>
-          <Typography variant="h1" component="h1" style={{fontWeight: 'bold'}}>
+          <Typography variant="h1" component="h1" style={{fontWeight: 'bold', fontSize: '65px'}}>
             <span className='purplemulticolored-text'>Secure</span> your family's safety, starting today
           </Typography>
         </Box>
@@ -49,9 +53,9 @@ function Section3() {
         <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }}>
             <Box display="flex" flexDirection='column' flexbasis='40%'  padding='20px'>
                 <WhiteBox>
-                    <Typography variant="h2" component="h2" mb={2} style={{color:'#004aad'}}>
+                    <WhiteBoxText variant="h2" component="h2">
                         Start your journey here...
-                    </Typography>
+                    </WhiteBoxText>
                 </WhiteBox>
                 <StyledList>
                     <li>Turn on your robot.</li>
@@ -75,9 +79,9 @@ function Section3() {
             
             <Box display="flex" flexDirection='column' flexbasis='40%' padding='20px' marginLeft='50px' marginTop='80px'>
                 <WhiteBox>  
-                    <Typography variant="h2" component="h2" mb={2} style={{color:'#004aad'}}>
-                        Ready for more ???
-                    </Typography>
+                    <WhiteBoxText variant="h2" component="h2">
+                        Ready for more?
+                    </WhiteBoxText>
                 </WhiteBox>  
                 <StyledList>
                     <li>Set the robot to automatically patrol the house at specific timings.</li>

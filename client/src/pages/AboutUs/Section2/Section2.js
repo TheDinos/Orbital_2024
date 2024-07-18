@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Typography, Box } from '@mui/material';
+import {Grid, Typography} from '@mui/material';
 import { styled } from '@mui/system';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -9,6 +9,8 @@ import CCTVImage from './images/CCTVImage.jpg';
 import ComImage from './images/ComImage.jpg';
 import RDImage from './images/RDImage.jpg';
 import LCImage from './images/LCImage.jpg';
+
+import './Section2.css';
 
 const CustomCard = styled(Card)({
    // minWidth: 350,   //Adding these will make the "Surveillance" card a different dimension
@@ -61,7 +63,7 @@ function Section2() {
     return (
     <div> 
     {/*Title*/}
-    <Typography variant="h1" fontWeight="bold" style={{ textAlign: 'center'}} gutterBottom>
+    <Typography variant="h1" fontWeight="bold" fontSize='65px' style={{ textAlign: 'center'}} gutterBottom>
         Why Choose <span className="redmulticolored-text">RHM</span>?
     </Typography>        
         
@@ -72,10 +74,10 @@ function Section2() {
                 <CustomCard>
                     <Media component="img" image={card.media} alt="Card Media" />
                     <CustomCardContent>
-                        <Typography variant="h2" component="div" gutterBottom style={{fontWeight: 'bold', fontSize: '30px'}}>
+                        <Typography variant="h2" component="div" gutterBottom style={{fontWeight: 'bold', fontSize: '28px',  fontFamily: 'Poppins, sans-serif',}}>
                             {card.title}
                         </Typography>
-                        <Typography variant="body2" style={{ fontSize: '22px'}}>
+                        <Typography variant="body2" style={{ fontSize: '18px', fontFamily:'Poppins, sans-serif'}}>
                             {card.content}
                         </Typography>
                     </CustomCardContent>

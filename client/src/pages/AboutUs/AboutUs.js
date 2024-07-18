@@ -34,11 +34,11 @@ const Section = styled(Box)({ //Container for each section of the page
 
 const theme = createTheme({
     typography: {
-      fontFamily: 'Canva Sans', //Default font
-      h1: { fontFamily: 'Archivo Black',},
-      h2: {fontFamily: 'Canva Sans',},
-      body1: {fontFamily: 'Canva Sans',},
-      body2: {fontFamily: 'Poppins',},
+      fontFamily: 'Canva Sans, sans-serif', //Default font
+      h1: { fontFamily: 'Archivo Black, sans-serif',},
+      h2: {fontFamily: 'Canva Sans, sans-serif',},
+      body1: {fontFamily: 'Canva Sans, sans-serif',},
+      body2: {fontFamily: 'Poppins, sans-serif',},
     },
 });
 
