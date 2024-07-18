@@ -1,9 +1,0 @@
-
-  .black-bar {
-    width: 100%; /* Full width of the viewport */
-    height: 5vh; /* Height of black bar relative to viewport*/
-    text-align: center; /*Aligning texts to the center*/
-    color: #FAF9F6	; /*Colour or words*/
-    font-size: 3.2vh; /*Font size of words across black bar relative to view port*/
-    background-color: #36454F; /*Colour of black bar*/
-  }

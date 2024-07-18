@@ -1,20 +1,27 @@
+import { styled } from '@mui/system';
 import Dpad from './Dpad';
 import RobotVideo from './VideoLivestream';
-import ControlBar from './ControlTopBar';
+import ControlTopBar from './ControlTopBar';
 import ControlMovementHeader from './ControlMovementHeader'
+
+const PageContainer = styled('div')({ //Container for the entire page
+    background: 'linear-gradient(90deg, #12100e, #2d3436, #434343)',
+    minHeight: '100vh',
+    minWidth: '100vw',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: 0,
+});
 
 function TeleOperation(){
     return(
-        <div className="App">
-            <header className="App-header">
-            <ControlBar/>
+        <PageContainer>
+            <ControlTopBar/>
             <RobotVideo/> 
-            
             <ControlMovementHeader/>
             <Dpad/>
-               
-            </header>
-        </div>
+        </PageContainer>
     );
 }
 export default TeleOperation

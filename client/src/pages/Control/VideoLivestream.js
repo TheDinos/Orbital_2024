@@ -1,14 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useRef, useEffect } from 'react';
 import useWebSocketConnection from '../../components/UseWebsocket';
-import CircularProgress from '@mui/material/CircularProgress';
-import './VideoLivestream.css'
 
 const RobotVideo = () => {
   const {deviceVideo} = useWebSocketConnection();
   const canvasRef = useRef(null); //References html canvas element
   const contextRef = useRef(null); //References 2D rendering context
-  const [isLoaded, setIsLoaded] = useState(true); // Track if video has loaded
-
 
   useEffect(() => { //canvas element must be in DOM for it to be initialised
     if (canvasRef.current) {
@@ -29,7 +25,6 @@ const RobotVideo = () => {
       const image = new Image();
       image.src = `data:image/jpeg;base64,${deviceVideo}`;
 
-      setIsLoaded(true);
       image.onload = () => {
         //Clears previous drawing on the canvas
         contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -41,17 +36,7 @@ const RobotVideo = () => {
 
   return (
     <div id="main-wrapper">
-        {!isLoaded && (
-          <CircularProgress 
-            style={{ 
-              position: 'absolute',
-              top: '35%', 
-              left: '50%', 
-              transform: 'translate(-50%, -50%)' 
-            }} 
-          />
-        )}
-        <canvas id="canvas-stream" ref={canvasRef} alt="Device Image"></canvas> 
+        <canvas id="canvas-stream" ref={canvasRef} alt="Device Image" style={{ border: '12px solid #f2f1eb', borderRadius: '8px', marginBottom: '15px'}}></canvas> 
     </div>
   );
 };

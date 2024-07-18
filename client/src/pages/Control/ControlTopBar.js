@@ -1,20 +1,17 @@
-import  React, {useState} from 'react';
-import useWebSocketConnection from '../../components/UseWebsocket.js'
+import React, { useState } from 'react';
+import useWebSocketConnection from '../../components/UseWebsocket.js';
 import Stack from '@mui/material/Stack';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button'; 
-import Box from '@mui/material/Box';
+import { AppBar, Toolbar, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Divider from '@mui/material/Divider';
-import { useAuth } from "../../firebaseAuth/AuthContext.js"
-import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../firebaseAuth/AuthContext.js';
+import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/system';
 
+const BarText = styled(Box)({
+    color: '#ffffff',
+    fontSize: '20px', 
+    fontFamily: 'Canva Sans, sans-serif',
+});
 
 function ControlBar() { 
     const {logout} = useAuth();
@@ -42,23 +39,22 @@ function ControlBar() {
     }
 
     return (
-        <AppBar position="static" sx={{bgcolor:"#36454F", marginBottom: '10px'}} >
+        <AppBar position="static" sx={{color: '#ffffff', bgcolor:'#858896', marginBottom: '15px'}} >
         <Toolbar>
             <Stack 
             direction='row' 
             paddingLeft={1} //Space away from the icon
             spacing={3} 
-            divider={<Divider aria-hidden="true" orientation="vertical" flexItem sx={{bgcolor: "secondary.light"}}/>} 
+            divider={<Divider aria-hidden="true" orientation="vertical" flexItem sx={{bgcolor: "#ffffff", width: '4px'}}/>} 
             sx={{ flexGrow: 1, alignItems:'center', justifyContent: 'flex-start' }}>
                 
                 <SettingsIcon fontSize='large'/>
-                <Box color='inherit'>Connection Status: {deviceStatus}</Box>
-                <Box color='inherit'>Battery Level: </Box>
-                <Box color='inherit'>Connection Time: </Box>   
+                <BarText>Connection Status: {deviceStatus}</BarText>
+                <BarText>Connection Time: </BarText>   
             </Stack>
       
 
-            <Button variant="contained" color="error" onClick={openDisconnectDialog}>Disconnect</Button>
+            <Button variant="contained" color="error" onClick={openDisconnectDialog}  sx={{ fontSize: '15px', fontFamily: 'Canva Sans, sans-serif', }}>Disconnect</Button>
             <Dialog
                 open={disconnectOpen}
                 onClose={closeDisconnectDialog}
@@ -68,7 +64,7 @@ function ControlBar() {
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                     Disconnection will require you to login again. 
-                </DialogContentText>
+                </DialogContentText>    
             </DialogContent>
             <DialogActions>
             <Button onClick={handleDisconnect}>Disconnect</Button>
