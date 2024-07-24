@@ -1,25 +1,25 @@
 import React from 'react';
-import { Container, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { styled } from '@mui/system';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import './AboutUs.css';
-import '../Intro/Intro.css'
 
 import Section1 from './Section1/Section1';
 import Section2 from './Section2/Section2';
 import Section3 from './Section3/Section3';
 
 
-const PageContainer = styled(Container)({ //Container for the entire page
+const PageContainer = styled(Box)({ //Container for the entire page
     background: 'linear-gradient(90deg, #12100e, #2d3436, #434343)',
     minHeight: '100vh',
-    minWidth: '100vw',
+    maxWidth: '100vw',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     color: 'white',
+    overflowX: 'hidden',  // Prevent horizontal scrolling
 });
 
 const Section = styled(Box)({ //Container for each section of the page
@@ -48,7 +48,7 @@ function AboutUs() {
     <ThemeProvider theme={theme}> {/*Elements wrapped will be able to use the predefined fonts*/}
     <PageContainer>
         {/*First Section: Quick intro*/}
-        <Section>
+        <Section marginTop={2}>
             <Section1/>
         </Section>
 

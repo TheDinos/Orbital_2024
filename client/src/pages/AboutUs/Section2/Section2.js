@@ -7,16 +7,15 @@ import CardMedia from '@mui/material/CardMedia';
 
 import CCTVImage from './images/CCTVImage.jpg';
 import ComImage from './images/ComImage.jpg';
-import RDImage from './images/RDImage.jpg';
 import LCImage from './images/LCImage.jpg';
 
 import './Section2.css';
 
 const CustomCard = styled(Card)({
-   // minWidth: 350,   //Adding these will make the "Surveillance" card a different dimension
-   // maxWidth: 350,
-    minHeight: 300,
-    maxheight: 300,
+    minWidth: 360, 
+    maxWidth: 370,
+    minHeight: 200,
+    maxheight: 320,
     margin: '20px',
     textAlign: 'justify',
     border: '20px solid #f2f1eb',
@@ -53,11 +52,6 @@ function Section2() {
             content: 'The platform is made using cheap, common components and is no larger than a shoe. Only one is required to patrol an apartment.',
             media: LCImage,
         },
-        {
-            title: 'Reduced Discomfort',
-            content: 'Gesture recognition also allows the platform to function as a “toy”, reducing potential discomfort surrounding the robot. ',
-            media: RDImage,
-        },
         ];
 
     return (
@@ -70,7 +64,7 @@ function Section2() {
     {/*Cards*/}
     <Grid container spacing={9} justifyContent="center" alignItems="center">
         {cards.map((card, index) => (
-            <Grid key={index} item xs={12} sm={4} md={3} style={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid key={index} item xs={12} sm={4} md={4} style={{ display: 'flex', justifyContent: 'center' }}>
                 <CustomCard>
                     <Media component="img" image={card.media} alt="Card Media" />
                     <CustomCardContent>

@@ -22,21 +22,26 @@ const ContentContainer = styled(Box)({
 
 const ImageContainer = styled(Box)({
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     height: '100vh',
+    maxHeight: '100vh', // Ensure it doesn't exceed viewport height
+    overflow: 'hidden',
+    position: 'relative',
+    width: '100%',
 });
 
 const StyledImage = styled('img')({
-    height: '100%',
-    width: 'auto',
+    maxHeight: '100%',
     objectFit: 'contain',
+    position: 'absolute',
+    left: '-180px', // Adjust this value to move the image to the left
 });
 
 function Section1() {
 
     return (
-    <Grid container spacing={3} justify="center" alignItems="center">
+    <Grid container spacing={3} justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
     {/* Grid item for the text */}
         <Grid item xs={12} sm={5} md={5}  >
         <ContentContainer>

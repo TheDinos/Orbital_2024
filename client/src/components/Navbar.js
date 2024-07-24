@@ -16,7 +16,7 @@ function Navbar(){
     if(pathname.includes("/Control")||pathname.includes("/control")) return null;
 
   return (
-    <AppBar >
+    <AppBar sx={{marginBottom: '15px'}}>
         <Toolbar>
           <SmartToySharpIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
