@@ -41,7 +41,8 @@ function Connect(){
     
     const handleConnect = async () => {
         try{
-            await login(robotId, robotPw);
+            const modifiedRobotId = robotId + "@gmail.com";  //To take away the need for an email address
+            await login(modifiedRobotId, robotPw);
             navigate("/Control"); //redirects to Control if login is successful, Control is a protected route
         }
         catch (error) {
