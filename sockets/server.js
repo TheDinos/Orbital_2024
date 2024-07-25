@@ -34,16 +34,17 @@ const addClients = (ws) =>{
 const ClientWss = new WebSocket.Server({port: WS_CLIENT_PORT}, () => console.log(`Client WS Server is listening at ${WS_CLIENT_PORT}`)); 
 
 //Handles Client Connections 
-ClientWss.on('connection', async (ws, request) => {  
-	//Extract Token from URL
-	const urlParams = new URLSearchParams(request.url.replace('/?', ''));
-	const token = urlParams.get('token');
-	if (!token) { //If there is no token, does not establish a connection
-		console.log('Token not found');
+ClientWss.on('connection', async (ws, req) => {  
+	
+	//Getting the token from the header protocol
+	const token = req.headers['sec-websocket-protocol'];
+	
+	//If the client is trying to establish a connection without a token, return
+	if (!token) {
 		ws.close();
 		return;
-	}	
-
+	  }
+ 
 	//Verify the token
 	const decodedToken = await verifyToken(token);
 	if (!decodedToken) { //If there is an error verifying the token, null is returned and a connection is not established

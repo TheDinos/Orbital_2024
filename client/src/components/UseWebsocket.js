@@ -7,29 +7,31 @@ const useWebSocketConnection = () => {
   const [deviceStatus, setDeviceStatus] = useState("Disconnected");
 
   const [socketUrl, setSocketUrl] = useState(null);
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl); 
+  const [protocols, setProtocols] = useState([]); //Use of protocols ensure id token is encrpyted during transmission
 
   useEffect(() => {
     (async () => {
       try {
-        // Obtain Firebase ID token   
-        const user = auth.currentUser;  
+        const user = auth.currentUser;
         if (user) {
           const idToken = await user.getIdToken();
-
-        // Construct WebSocket URL and set it
-        const wsUrl = `ws://localhost:8999?token=${idToken}`;
-        setSocketUrl(wsUrl);
-        }
-        else {
+          setProtocols([idToken]);
+          setSocketUrl('ws://localhost:8999'); // Secure WebSocket URL
+        } else {
           console.error('No user is signed in.');
         }
-      }  
-      catch (error) {
+      } catch (error) {
         console.error('Error fetching Firebase ID token:', error);
       }
-      })();
-      } ,[]);
+    })();
+  }, []);
+
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
+    protocols,
+    onOpen: () => console.log('WebSocket connection opened'),
+    onClose: () => console.log('WebSocket connection closed'),
+    onError: (event) => console.error('WebSocket error', event),
+  });
   
 
   useEffect(() => {  //Runs when a new message is received (when lastMessage changes)
