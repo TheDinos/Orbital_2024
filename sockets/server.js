@@ -1,15 +1,9 @@
 const path = require('path');
-const express = require('express');
 const WebSocket = require('ws');
 const { v4: uuidv4 } = require('uuid');
 const {verifyToken} = require('./auth'); //Importing the verify token function from auth file
 const EventEmitter = require('events');
 const commandEmitter = new EventEmitter();
-
-
-const app = express();
-
-app.use('/static', express.static(path.join(__dirname, 'public'))); //express server to store static websites
 
 const WS_CLIENT_PORT = 8999;
 const HTTP_PORT = 8000;
@@ -24,12 +18,10 @@ let devices = {  //Stores array of robots and their infos
 };
 
 // Clients
-
 //Giving a unique ID to each client connected
 const addClients = (ws) =>{
 	ws.uid = ws.uid || uuidv4(); 
 }
-
 //Initialise Websocket Server for Clients
 const ClientWss = new WebSocket.Server({port: WS_CLIENT_PORT}, () => console.log(`Client WS Server is listening at ${WS_CLIENT_PORT}`)); 
 
@@ -121,7 +113,7 @@ Object.entries(devices).forEach(([deviceUid, device]) => {
 			
 			//Broadcast to respective client
 
-            //Broadcasts to all connected clients(change this)
+            //Broadcasts to all connected clients(change this once we can map users to appropriate robot)
 			ClientWss.clients.forEach(client => {
 				client.send(JSON.stringify({ image: device.image, connectionStatus: device.connectionStatus }));
 			});
@@ -141,6 +133,3 @@ Object.entries(devices).forEach(([deviceUid, device]) => {
 
 	});
 });
-
-app.get('/client',(_req,res)=>{ res.sendFile(path.resolve(__dirname,'./public/client.html')); });
-app.listen(HTTP_PORT,()=>{ console.log(`HTTP server starting on ${HTTP_PORT}`); });
